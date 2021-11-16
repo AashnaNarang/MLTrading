@@ -1,4 +1,4 @@
-# ML-Trading2
+# MLTrading
 
 # Setup Instruction
 
