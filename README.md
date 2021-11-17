@@ -16,7 +16,7 @@
     $ yarn install
 
     If you get an error that says "'react-scripts' is not recognized as an internal or external command" then run the following
-    $ rm -rf node_modules && npm install
+    $ rm -rf node_modules && yarn install
     Once that is complete then run the following
     $ yarn start
     ```
