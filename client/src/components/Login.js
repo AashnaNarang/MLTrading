@@ -1,55 +1,104 @@
-import React from 'react';
+import React from "react";
 import { Link } from 'react-router-dom';
+import logo from './main_image.jpg'
+import '../App.css';
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
 
 const Login = props => {
+  // Initialize a boolean state
+  const [values, setValues] = React.useState({
+    password: "",
+    showPassword: false,
+  });
+
+  const handlePasswordChangeValue = (prop) => (event) => {
+    setValues({ ...values, [prop]: event.target.value });
+  };
+
+  const handleMouseDownClickEvent = (event) => {
+    event.preventDefault();
+  };
+
+  const handleShowPasswordClick = () => {
+    //Unsure about values -> try ...props.password.value if this fails
+    setValues({ ...values, showPassword: !values.showPassword });
+  };
+
   return (
-    <div className="container">
-      <div style={{ marginTop: '4rem' }} className="row">
-        <div className="col s8 offset-s2">
-          <div className="col s12" style={{ paddingLeft: '11.250px' }}>
-            <h4>
-              <b>Login</b>
-            </h4>
-          </div>
-          <form noValidate onSubmit={props.onClick}>
-            <div className="input-field col s12">
-              Email
-              <input
-                onChange={props.onChange}
-                value={props.email.value}
-                id="email"
-                type="email"
-                name="email"
-              />
-            </div>
-            <div className="input-field col s12">
-              Password
-              <input
-                onChange={props.onChange}
-                value={props.password.value}
-                id="password"
-                type="password"
-                name="password"
-              />
-              <p className="grey-text text-darken-1">
-                Don't have an account? <Link to="/register">Register</Link>
-              </p>
-            </div>
-            <div className="col s12" style={{ paddingLeft: '11.250px' }}>
+    <div class="container">
+      <div class="main-image">
+        <img src={logo} alt="" />
+      </div>
+
+      <div class="login-page-container">
+
+        <div class="login-register-container">
+          <div class="login-text-button">
+            <Link to="/login">
               <button
-                style={{
-                  width: '150px',
-                  borderRadius: '3px',
-                  letterSpacing: '1.5px',
-                  marginTop: '1rem',
-                }}
-                type="submit"
-                className="btn btn-large waves-effect waves-light hoverable blue accent-3"
+                type="login-option"
               >
-                Login
+                <b>Login</b>
               </button>
-            </div>
-          </form>
+            </Link>
+          </div>
+
+          <div class="register-text-button">
+            <Link to="/register">
+              <button
+                type="login-option"
+              >
+                <b>Register</b>
+              </button>
+            </Link>
+          </div>
+        </div>
+
+        <div class="email-input-field">
+          Email
+          <input
+            onChange={props.onChange}
+            value={props.email.value}
+            id="email"
+            type="email"
+            name="email"
+          />
+        </div>
+
+        <div class="password-input-field">
+          Password
+          <input
+            type={values.showPassword ? "text" : "password"}
+            onChange={handlePasswordChangeValue("password")}
+          />
+          <button
+            onClick={handleShowPasswordClick}
+            onMouseDown={handleMouseDownClickEvent}
+          >
+            {values.showPassword ? <Visibility /> : <VisibilityOff />}
+          </button>
+        </div>
+
+        <div class="forgot-password-field">
+          <p class="forgot-password-button">
+            Forgot Password? <Link to="/forgotpassword">Reset</Link>
+          </p>
+        </div>
+
+        <div class="login-button">
+          <button
+            style={{
+              width: '150px',
+              borderRadius: '3px',
+              letterSpacing: '1.5px',
+              marginTop: '1rem',
+            }}
+            type="submit"
+            className="btn btn-large waves-effect waves-light hoverable black accent-3"
+          >
+            Login
+          </button>
         </div>
       </div>
     </div>
