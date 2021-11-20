@@ -10,7 +10,7 @@ const auth = require('../../src/middlewares/auth');
 const { tokenService, emailService } = require('../../src/services');
 const ApiError = require('../../src/utils/ApiError');
 const setupTestDB = require('../utils/setupTestDB');
-const { User, Token } = require('../../src/models');
+const { User, Token, Portfolio } = require('../../src/models');
 const { roleRights } = require('../../src/config/roles');
 const { tokenTypes } = require('../../src/config/tokens');
 const { userOne, admin, insertUsers } = require('../fixtures/user.fixture');
@@ -26,6 +26,7 @@ describe('Auth routes', () => {
         name: faker.name.findName(),
         email: faker.internet.email().toLowerCase(),
         password: 'password1',
+        initialFreeCash: 500,
       };
     });
 
@@ -50,6 +51,19 @@ describe('Auth routes', () => {
         access: { token: expect.anything(), expires: expect.anything() },
         refresh: { token: expect.anything(), expires: expect.anything() },
       });
+
+      expect(res.body.portfolio).toEqual({
+        portfolioType: "personal",
+        transactionCost: 1.5,
+        currency: "USD",
+        user: res.body.user.id,
+        initialFreeCash: 500,
+        freeCash: 500,
+        id: expect.anything(),
+      });
+
+      const dbPortfolio = await Portfolio.findById(res.body.portfolio.id);
+      expect(dbPortfolio).toBeDefined();
     });
 
     test('should return 400 error if email is invalid', async () => {
