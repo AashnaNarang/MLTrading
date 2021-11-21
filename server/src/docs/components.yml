@@ -47,6 +47,37 @@ components:
         message:
           type: string
 
+    Portfolio:
+      type: object
+      properties:
+        id:
+          type: string
+        user:
+          type: string
+          format: email
+        portfolioType:
+          type: string
+        currPortfolioValue:
+          type: number
+        initialFreeCash:
+          type: number
+        freeCash:
+          type: number
+        transactionCost:
+          type: number
+        currency:
+          type: string
+          enum: ["USD"]
+      example:
+        id: 5ebac534954b54139806c112
+        user: 619308412ff24d3d28d7fe2b
+        portfolioType: personal
+        currPortfolioValue: 500.00
+        initialFreeCash: 500.00
+        freeCash: 500.00
+        transactionCost: 1.50
+        currency: USD
+
   responses:
     DuplicateEmail:
       description: Email already taken
