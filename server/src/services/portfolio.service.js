@@ -59,8 +59,8 @@ const updatePortfolioById = async (portfolioId, updateBody) => {
   if (!portfolio) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Portfolio not found');
   }
-  if (portfolioBody.user) {
-    await validateUserId(portfolioBody.user, "User with this ID does not exist");
+  if (updateBody.user) {
+    await validateUserId(updateBody.user, "User with this ID does not exist");
   }
 
   Object.assign(portfolio, updateBody);
@@ -69,14 +69,14 @@ const updatePortfolioById = async (portfolioId, updateBody) => {
 };
 
 /**
- * Delete user by id
+ * Delete portfolio by id
  * @param {ObjectId} portfolioId
  * @returns {Promise<Portfolio>}
  */
 const deletePortfolioById = async (portfolioId) => {
   const portfolio = await getPortfolioById(portfolioId);
   if (!portfolio) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Portfolio not found');
   }
   await portfolio.remove();
   return portfolio;

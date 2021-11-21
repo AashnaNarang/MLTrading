@@ -265,7 +265,6 @@ describe('Portfolio routes', () => {
       expect(res.body).toEqual({
         id: portfolioOne._id.toHexString(),
         user: userOne._id.toHexString(),
-        user: userOne._id,
         portfolioType: 'personal',
         currPortfolioValue: 50,
         initialFreeCash: 50,
@@ -320,7 +319,7 @@ describe('Portfolio routes', () => {
       await insertPortfolios([portfolioOne, portfolioTwo, portfolioThree])
 
       await request(app)
-        .get(`/v1/portoflios/${portfolioOne._id}`)
+        .get(`/v1/portfolios/${portfolioOne._id}`)
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send()
         .expect(httpStatus.OK);
@@ -348,7 +347,7 @@ describe('Portfolio routes', () => {
     });
   });
 
-  describe('DELETE /v1/portfolios/:portofolioId', () => {
+  describe('DELETE /v1/portfolios/:portfolioId', () => {
     test('should return 204 if data is ok', async () => {
       await insertUsers([userOne]);
       await insertPortfolios([portfolioOne])
@@ -359,7 +358,7 @@ describe('Portfolio routes', () => {
         .send()
         .expect(httpStatus.NO_CONTENT);
 
-      const dbPortfolio = await Portfolio.findById(portfolio._id);
+      const dbPortfolio = await Portfolio.findById(portfolioOne._id);
       expect(dbPortfolio).toBeNull();
     });
 
@@ -433,7 +432,7 @@ describe('Portfolio routes', () => {
         .expect(httpStatus.OK);
 
       expect(res.body).toEqual({
-          _id: portfolioOne._id.toHexString(),
+          id: portfolioOne._id.toHexString(),
           user: userOne._id.toHexString(),
           portfolioType: 'personal',
           currPortfolioValue: 55,
@@ -445,7 +444,7 @@ describe('Portfolio routes', () => {
 
       const dbPortfolio = await Portfolio.findById(portfolioOne._id);
       expect(dbPortfolio).toBeDefined();
-      expect(dbPortfolio).toMatchObject({ user: userOne, portfolioType: updateBody.portfolioType, initialFreeCash: updateBody.initialFreeCash, 
+      expect(dbPortfolio).toMatchObject({ user: userOne._id, portfolioType: updateBody.portfolioType, initialFreeCash: updateBody.initialFreeCash, 
         transactionCost: updateBody.transactionCost, currPortfolioValue: updateBody.currPortfolioValue, currency: "USD", freeCash: updateBody.freeCash});
     });
 
