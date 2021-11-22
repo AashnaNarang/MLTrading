@@ -1,0 +1,88 @@
+.container-register-tab{
+    display: flex;
+    position: absolute;
+    flex-direction: row;
+}
+
+.login-page-container-register-tab{
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    padding-bottom: 60px;
+}
+
+.login-page-container-register-tab input{
+    flex: 1;
+}
+
+/* Login / Regsiter buttons ontop of the email and password fields */
+.login-register-container-register-tab{
+    display: flex;
+    position: relative;
+    padding-bottom: 40px;
+    padding-left: 185px;
+}
+
+
+.login-text-button-register-tab button{
+    flex: 1;
+    width: 75px;
+    height: auto;
+    text-align: center;
+    margin-right: 15px;
+    color: green;
+    border-bottom: 3px solid yellowgreen;
+    background-color: white;
+    border-style: none none solid none;
+    padding-bottom: 8px;
+    cursor: pointer;
+}
+
+.register-text-button-register-tab button{
+    flex: 1;
+    width: 75px;
+    height: auto;
+    text-align: center;
+    margin-left: 15px;
+    color: green;
+    border-bottom: 3px solid green;
+    background-color: white;
+    border-style: none none solid none;
+    padding-bottom: 8px;
+    cursor: pointer;
+}
+
+.login-text-button-register-tab button:focus{
+    background:none;
+    text-decoration-color: green;
+    border-bottom: 3px solid green;
+    padding-bottom: 8px;
+}
+
+.password-input-field-register-tab {
+    position: relative;
+    min-height: 100%;
+    min-width: 550px;
+  }
+
+.re-enter-password-input-field-register-tab {
+    position: relative;
+    min-height: 100%;
+    min-width: 550px;
+}
+
+.initial-cash-amount-input-field-register-tab {
+    position: relative;
+    min-height: 100%;
+    min-width: 550px;
+}
+
+.email-input-field-register-tab {
+    position: relative;
+    min-height: 100%;
+    min-width: 100%;
+}
+
+.p { 
+    padding-top: -10px;
+ }

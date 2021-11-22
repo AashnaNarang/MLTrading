@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from 'react-router-dom';
 import logo from './main_image.jpg'
-import '../App.css';
+import '../Login.css';
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 
@@ -25,6 +25,11 @@ const Login = props => {
     setValues({ ...values, showPassword: !values.showPassword });
   };
 
+  function removeLayout() {
+    var forgotPasswordField = document.getElementById("register-text-button");
+    forgotPasswordField.remove();
+  }
+
   return (
     <div class="container">
       <div class="main-image">
@@ -46,9 +51,7 @@ const Login = props => {
 
           <div class="register-text-button">
             <Link to="/register">
-              <button
-                type="login-option"
-              >
+              <button type="login-option">
                 <b>Register</b>
               </button>
             </Link>
@@ -80,7 +83,10 @@ const Login = props => {
           </button>
         </div>
 
-        <div class="forgot-password-field">
+        <div
+          class="forgot-password-field"
+          id="register-text-button"
+        >
           <p class="forgot-password-button">
             Forgot Password? <Link to="/forgotpassword">Reset</Link>
           </p>
@@ -96,6 +102,7 @@ const Login = props => {
             }}
             type="submit"
             className="btn btn-large waves-effect waves-light hoverable black accent-3"
+            onclick="removeLayout(); "
           >
             Login
           </button>
