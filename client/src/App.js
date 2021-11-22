@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import RouterComponent from './router/RouterComponent';
-
 import { setUserToken } from './store/actions/auth.action';
 import { USER_TOKEN } from './constants';
 
 class App extends Component {
+
   componentDidMount() {
     const token = localStorage.getItem(USER_TOKEN);
     if (token) {
@@ -31,4 +31,5 @@ function mapStateToProps(state) {
 function matchDispatchToProps(dispatch) {
   return bindActionCreators({ setUserToken }, dispatch);
 }
+
 export default connect(mapStateToProps, matchDispatchToProps)(App);
