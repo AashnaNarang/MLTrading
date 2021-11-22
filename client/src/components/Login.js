@@ -25,11 +25,6 @@ const Login = props => {
     setValues({ ...values, showPassword: !values.showPassword });
   };
 
-  function removeLayout() {
-    var forgotPasswordField = document.getElementById("register-text-button");
-    forgotPasswordField.remove();
-  }
-
   return (
     <div class="container">
       <div class="main-image">
@@ -83,10 +78,7 @@ const Login = props => {
           </button>
         </div>
 
-        <div
-          class="forgot-password-field"
-          id="register-text-button"
-        >
+        <div class="forgot-password-field">
           <p class="forgot-password-button">
             Forgot Password? <Link to="/forgotpassword">Reset</Link>
           </p>
@@ -102,7 +94,6 @@ const Login = props => {
             }}
             type="submit"
             className="btn btn-large waves-effect waves-light hoverable black accent-3"
-            onclick="removeLayout(); "
           >
             Login
           </button>
