@@ -2,6 +2,7 @@ const passport = require('passport');
 const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const { roleRights } = require('../config/roles');
+const { portfolioService } = require('../services')
 
 const verifyCallback = (req, resolve, reject, requiredRights) => async (err, user, info) => {
   if (err || info || !user) {
@@ -12,8 +13,18 @@ const verifyCallback = (req, resolve, reject, requiredRights) => async (err, use
   if (requiredRights.length) {
     const userRights = roleRights.get(user.role);
     const hasRequiredRights = requiredRights.every((requiredRight) => userRights.includes(requiredRight));
-    if (!hasRequiredRights && req.params.userId !== user.id) {
-      return reject(new ApiError(httpStatus.FORBIDDEN, 'Forbidden'));
+
+    if (!hasRequiredRights) {
+      let belongsToThem;
+      if (req.params.portfolioId) {
+        portfolio = await portfolioService.getPortfolioById(req.params.portfolioId);
+        belongsToThem = portfolio ? (portfolio.user == user.id) : false;
+      } else {
+        belongsToThem = (req.params.userId == user.id);
+      }
+      if (!belongsToThem) {
+        return reject(new ApiError(httpStatus.FORBIDDEN, 'Forbidden'));
+      }
     }
   }
 
