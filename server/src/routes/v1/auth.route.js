@@ -52,10 +52,13 @@ module.exports = router;
  *                 format: password
  *                 minLength: 8
  *                 description: At least one number and one letter
+ *               initialFreeCash:
+ *                 type: number
  *             example:
  *               name: fake name
  *               email: fake@example.com
  *               password: password1
+ *               initialFreeCash: 500
  *     responses:
  *       "201":
  *         description: Created
