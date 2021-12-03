@@ -4,6 +4,8 @@ import {
   LOGIN_FAILED,
   LOGIN_SUCCESSFULLY,
   LOGOUT,
+  REGISTER_FAILED,
+  REGISTER_SUCCESSFULLY,
 } from '../../constants';
 
 export const loginFailed = error => ({
@@ -11,9 +13,19 @@ export const loginFailed = error => ({
   payload: error,
 });
 
+export const registerFailed = error => ({
+  type: REGISTER_FAILED,
+  payload: error,
+});
+
 export const loginSuccessfully = user => ({
   type: LOGIN_SUCCESSFULLY,
   payload: user,
+});
+
+export const registerSuccessfully = user => ({
+  type: REGISTER_SUCCESSFULLY, 
+  payload: user
 });
 
 export const logout = () => ({
