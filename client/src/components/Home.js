@@ -7,7 +7,7 @@ const Home = props => {
       <div className="row">
         <div className="col s12 center-align">
           <h4>
-            <b>Home Page </b>
+            <b>User currently logged in</b>
           </h4>
           <br />
           <div className="col s6">

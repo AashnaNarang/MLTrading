@@ -63,12 +63,14 @@
     position: relative;
     min-height: 100%;
     min-width: 550px;
+    padding-bottom: 20px;
   }
 
 .re-enter-password-input-field-register-tab {
     position: relative;
     min-height: 100%;
     min-width: 550px;
+    padding-bottom: 20px;
 }
 
 .initial-cash-amount-input-field-register-tab {
@@ -77,12 +79,14 @@
     min-width: 550px;
 }
 
-.email-input-field-register-tab {
+.name-input-field-register-tab {
     position: relative;
     min-height: 100%;
     min-width: 100%;
 }
 
-.p { 
-    padding-top: -10px;
- }
+.email-input-field-register-tab {
+    position: relative;
+    min-height: 100%;
+    min-width: 100%;
+}

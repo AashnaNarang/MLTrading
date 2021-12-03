@@ -10,8 +10,10 @@ class RegisterPage extends Component {
   constructor() {
     super();
     this.state = {
+      name: '',
       email: '',
       password: '',
+      confirmPassword: '',
       initial_cash_amount: 0
     };
 
@@ -25,12 +27,18 @@ class RegisterPage extends Component {
 
   onClick = e => {
     e.preventDefault();
-    const { email, password, initial_cash_amount } = this.state;
-    this.props.register({ email, password, initial_cash_amount });
+    const { name, email, password, confirmPassword, initial_cash_amount } = this.state;
+    if (password !== confirmPassword) {
+      alert("Passwords don't match!");
+    }
+    else {
+      this.props.register({ name, email, password, initialFreeCash: parseInt(initial_cash_amount) });
+    }
+
   };
 
   render() {
-    const { email, password, cash } = { ...this.state };
+    const { name, email, password, confirmPassword, initial_cash_amount } = { ...this.state };
     const { user } = this.props || {};
     const { token } = user;
 
@@ -40,9 +48,11 @@ class RegisterPage extends Component {
       <Register
         onChange={e => this.onChange(e)}
         onClick={e => this.onClick(e)}
+        name={name}
         email={email}
         password={password}
-        initial_cash_amount = {cash}
+        confirmPassword={confirmPassword}
+        initial_cash_amount={initial_cash_amount}
       />
     );
   }

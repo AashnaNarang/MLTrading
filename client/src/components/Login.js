@@ -12,10 +12,6 @@ const Login = props => {
     showPassword: false,
   });
 
-  const handlePasswordChangeValue = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });
-  };
-
   const handleMouseDownClickEvent = (event) => {
     event.preventDefault();
   };
@@ -66,9 +62,27 @@ const Login = props => {
 
         <div class="password-input-field">
           Password
-          <input
+          {/* <input
             type={values.showPassword ? "text" : "password"}
             onChange={handlePasswordChangeValue("password")}
+            value={values.password}
+            id="password"
+            type="password"
+            name="password"
+            >
+            <button
+              onClick={handleShowPasswordClick}
+              onMouseDown={handleMouseDownClickEvent}
+            >
+              {values.showPassword ? <Visibility /> : <VisibilityOff />}
+            </button>
+          </input> */}
+          <input
+            type={values.showPassword ? "text" : "password"}
+            onChange={props.onChange}
+            value={props.password.value}
+            id="password"
+            name="password"
           />
           <button
             onClick={handleShowPasswordClick}
@@ -93,6 +107,7 @@ const Login = props => {
               marginTop: '1rem',
             }}
             type="submit"
+            onClick={props.onClick}
             className="btn btn-large waves-effect waves-light hoverable black accent-3"
           >
             Login

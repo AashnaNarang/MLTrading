@@ -11,6 +11,7 @@ export const login = userData => dispatch => {
       // Set userToken to Local Storage
       setTokenToLocalStorage(USER_TOKEN, res.data.token).then(() => {
         dispatch(loginSuccessfully(res.data));
+        window.location.href = '/';
       });
     })
     .catch(err => {

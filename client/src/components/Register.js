@@ -2,39 +2,18 @@ import React from "react";
 import { Link } from 'react-router-dom';
 import logo from './main_image.jpg'
 import '../Register.css';
-import Visibility from "@material-ui/icons/Visibility";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
 
 const Register = props => {
-    // Initialize a boolean state
-    const [values, setValues] = React.useState({
-        password: "",
-        showPassword: false,
-    });
-
-    const handlePasswordChangeValue = (prop) => (event) => {
-        setValues({ ...values, [prop]: event.target.value });
-    };
-
-    const handleMouseDownClickEvent = (event) => {
-        event.preventDefault();
-    };
-
-    const handleShowPasswordClick = () => {
-        //Unsure about values -> try ...props.password.value if this fails
-        setValues({ ...values, showPassword: !values.showPassword });
-    };
-
     return (
-        <div class="container-register-tab">
-            <div class="main-image">
+        <div className="container-register-tab">
+            <div className="main-image">
                 <img src={logo} alt="" />
             </div>
 
-            <div class="login-page-container-register-tab">
+            <div className="login-page-container-register-tab">
 
-                <div class="login-register-container-register-tab">
-                    <div class="login-text-button-register-tab">
+                <div className="login-register-container-register-tab">
+                    <div className="login-text-button-register-tab">
                         <Link to="/login">
                             <button
                                 type="login-option"
@@ -44,7 +23,7 @@ const Register = props => {
                         </Link>
                     </div>
 
-                    <div class="register-text-button-register-tab">
+                    <div className="register-text-button-register-tab">
                         <Link to="/register">
                             <button type="login-option">
                                 <b>Register</b>
@@ -53,7 +32,18 @@ const Register = props => {
                     </div>
                 </div>
 
-                <div class="email-input-field-register-tab">
+                <div className="name-input-field-register-tab">
+                    Name
+                    <input
+                        onChange={props.onChange}
+                        value={props.name.value}
+                        id="name"
+                        type="text"
+                        name="name"
+                    />
+                </div>
+
+                <div className="email-input-field-register-tab">
                     Email
                     <input
                         onChange={props.onChange}
@@ -64,38 +54,44 @@ const Register = props => {
                     />
                 </div>
 
-                <div class="password-input-field-register-tab">
+                <div className="password-input-field-register-tab">
                     Password
                     <input
                         onChange={props.onChange}
-                        type={props.password.value}
+                        value={props.password.value}
                         input type="password"
-                        pattern="(?=.*\d)(?=.*[a-zA-Z])(?=.*[0-9]).{8-15}"
+                        id="password"
+                        type="password"
+                        name="password"
                     />
-                    <span class="validity"></span>
-                    <p><small>Must be 8-15 characters, include 1 number, and 1 letter.</small></p>
+                    <span className="validity"></span>
+                    <label>Must be 8-15 characters, include 1 number, and 1 letter.</label>
                 </div>
 
-                <div class="re-enter-password-input-field-register-tab">
+                <div className="re-enter-password-input-field-register-tab">
                     Re-enter Password
                     <input
                         onChange={props.onChange}
-                        type={props.password.value}
+                        value={props.confirmPassword.value}
                         input type="password"
+                        id="confirmPassword"
+                        name="confirmPassword"
                     />
-                    <span class="validity"></span>
-                    <p><small>Re-enter the same password</small></p>
+                    <span className="validity"></span>
+                    <label>Re-enter the same password</label>
                 </div>
 
-                <div class="initial-cash-amount-input-field-register-tab">
+                <div className="initial-cash-amount-input-field-register-tab">
                     Initial Cash Amount
                     <input
                         onChange={props.onChange}
-                        type={props.password.initial_cash_amount}
+                        value={props.initial_cash_amount.value}
+                        id="initial_cash_amount"
+                        name="initial_cash_amount"
                     />
                 </div>
 
-                <div class="sign-up-button-register-tab">
+                <div className="sign-up-button-register-tab">
                     <button
                         style={{
                             width: '150px',
@@ -104,6 +100,7 @@ const Register = props => {
                             marginTop: '1rem',
                         }}
                         type="submit"
+                        onClick={props.onClick}
                         className="btn btn-large waves-effect waves-light hoverable black accent-3"
                     >
                         Sign Up
