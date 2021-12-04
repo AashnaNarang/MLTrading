@@ -6,7 +6,7 @@ const setupTestDB = require('../utils/setupTestDB');
 const { Portfolio } = require('../../src/models');
 const { portfolioOne, portfolioTwo, portfolioThree, insertPortfolios } = require('../fixtures/portfolio.fixture');
 const { userOne, userTwo, admin, insertUsers } = require('../fixtures/user.fixture');
-const { userOneAccessToken, adminAccessToken } = require('../fixtures/token.fixture');
+const { userOneAccessToken, adminAccessToken, userTwoAccessToken } = require('../fixtures/token.fixture');
 
 setupTestDB();
 
@@ -53,14 +53,40 @@ describe('Portfolio routes', () => {
       await request(app).post('/v1/portfolios').send(newPortfolio).expect(httpStatus.UNAUTHORIZED);
     });
 
-    test('should return 403 error if logged in user is not admin', async () => {
-      await insertUsers([userOne]);
+    test('should return 403 error if logged in user is adding a portfolio to another account', async () => {
+      await insertUsers([userOne, userTwo]);
 
       await request(app)
         .post('/v1/portfolios')
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .set('Authorization', `Bearer ${userTwoAccessToken}`)
         .send(newPortfolio)
         .expect(httpStatus.FORBIDDEN);
+    });
+
+    test('should return 201 if user is adding a portfolio to their own user account', async () => {
+      await insertUsers([userOne]);
+
+      const res = await request(app)
+        .post('/v1/portfolios')
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send(newPortfolio)
+        .expect(httpStatus.CREATED);
+
+      expect(res.body).toEqual({
+        // currPortfolioValue is null so it does not appear in the response
+        id: expect.anything(),
+        user: userOne._id.toHexString(),
+        portfolioType: 'personal',
+        initialFreeCash: 50,
+        freeCash: 50, 
+        transactionCost: 1.50,
+        currency: "USD"
+      });
+
+      const dbPortfolio = await Portfolio.findById(res.body.id);
+      expect(dbPortfolio).toBeDefined();
+      expect(dbPortfolio).toMatchObject({ id: expect.anything(), user: newPortfolio.user, portfolioType: newPortfolio.portfolioType, initialFreeCash: newPortfolio.initialFreeCash, 
+        transactionCost: newPortfolio.transactionCost, currency: "USD", freeCash: newPortfolio.initialFreeCash});
     });
 
     test('should return 404 error if user does not exist', async () => {
