@@ -72,7 +72,9 @@ module.exports = router;
  *       "403":
  *         $ref: '#/components/responses/Forbidden'
  *       "404":
- *         $ref: '#/components/responses/NotFound'
+ *         description: User with this ID does not exist
+ *       "400":
+ *         description: Initial Free Cash Value must be valid, positive number 
  *
  *   get:
  *     summary: Get all portfolios

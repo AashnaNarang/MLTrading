@@ -16,7 +16,14 @@ const validateUserId = async (userId, errorMessage) => {
   }
 };
 
+const validateInitialFreeCash = async (initialFreeCash, errorMessage) => {
+  if (initialFreeCash < 0) {
+    throw new ApiError(httpStatus.BAD_REQUEST, errorMessage);
+  }
+};
+
 module.exports = {
-    validateUserId
+    validateUserId,
+    validateInitialFreeCash
   };
   
