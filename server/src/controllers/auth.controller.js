@@ -1,20 +1,12 @@
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
-const { authService, userService, tokenService, emailService, portfolioService } = require('../services');
+const { authService, userService, tokenService, emailService } = require('../services');
 
 const register = catchAsync(async (req, res) => {
-  let portfolioBody, initialFreeCash;
-  initialFreeCash = req.body.initialFreeCash;
-  delete req.body.initialFreeCash;
   const user = await userService.createUser(req.body);
   const tokens = await tokenService.generateAuthTokens(user);
 
-  portfolioBody = {
-    user: user._id,
-    initialFreeCash: initialFreeCash
-  };
-  const portfolio = await portfolioService.createPortfolio(portfolioBody)
-  res.status(httpStatus.CREATED).send({ user, tokens, portfolio });
+  res.status(httpStatus.CREATED).send({ user, tokens });
 });
 
 const login = catchAsync(async (req, res) => {
