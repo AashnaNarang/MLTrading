@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component, useReducer } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Redirect, withRouter } from 'react-router-dom';
 
 import { register } from '../api/register.api';
 import Register from '../components/Register.js';
+import Alert from '@material-ui/lab/Alert';
 
 class RegisterPage extends Component {
   constructor() {
@@ -29,12 +30,11 @@ class RegisterPage extends Component {
     e.preventDefault();
     const { name, email, password, confirmPassword, initial_cash_amount } = this.state;
     if (password !== confirmPassword) {
-      alert("Passwords don't match!");
+      alert("Password's do not match")
     }
     else {
       this.props.register({ name, email, password, initialFreeCash: parseInt(initial_cash_amount) });
     }
-
   };
 
   render() {
@@ -45,15 +45,22 @@ class RegisterPage extends Component {
     return token ? (
       <Redirect to="/" user={user} />
     ) : (
-      <Register
-        onChange={e => this.onChange(e)}
-        onClick={e => this.onClick(e)}
-        name={name}
-        email={email}
-        password={password}
-        confirmPassword={confirmPassword}
-        initial_cash_amount={initial_cash_amount}
-      />
+      <React.Fragment>
+        {!!user.errors &&
+          <Alert severity="error">
+            {user.errors.data.message}
+          </Alert>
+        }
+        <Register
+          onChange={e => this.onChange(e)}
+          onClick={e => this.onClick(e)}
+          name={name}
+          email={email}
+          password={password}
+          confirmPassword={confirmPassword}
+          initial_cash_amount={initial_cash_amount}
+        />
+      </React.Fragment>
     );
   }
 }
@@ -61,7 +68,7 @@ class RegisterPage extends Component {
 // Store
 function mapStateToProps(state) {
   return {
-    user: state.user,
+    user: state.user
   };
 }
 

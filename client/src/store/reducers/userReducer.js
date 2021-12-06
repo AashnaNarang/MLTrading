@@ -1,16 +1,22 @@
 import {
   LOGIN_SUCCESSFULLY,
   LOGIN_FAILED,
+  REGISTER_SUCCESSFULLY,
+  REGISTER_FAILED,
   LOGOUT,
   SET_USER_TOKEN,
 } from '../../constants';
 
-export default function(state = { loading: false, errors: null }, action) {
+export default function (state = { loading: false, errors: null }, action) {
   switch (action.type) {
     case LOGIN_SUCCESSFULLY:
       return { ...state, ...action.payload, ...{ loading: false } };
+    case REGISTER_SUCCESSFULLY:
+      return { ...state, ...action.payload, ...{ loading: false } };
     case LOGIN_FAILED:
-      return { ...state, ...{ loading: false }, ...{ errors: action.payload } };
+      return { ...state, ...{ loading: false }, ...{ errors: action.payload.response } };
+    case REGISTER_FAILED:
+      return { ...state, ...{ loading: false }, ...{ errors: action.payload.response } };
     case SET_USER_TOKEN:
       return action.payload;
     case LOGOUT:
