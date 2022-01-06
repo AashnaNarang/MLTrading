@@ -166,7 +166,7 @@ module.exports = router;
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/User'
+ *                $ref: '#/components/schemas/Portfolio'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
