@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { registerSuccessfully, registerFailed } from '../store/actions/auth.action';
-import { HOST, REGISTER_URI, USER_TOKEN, CREATE_PORTFOLIO_URI } from '../constants';
+import { HOST, REGISTER_URI, USER_TOKEN, PORTFOLIO_URI } from '../constants';
 import { setTokenToLocalStorage } from '../utils';
 import { generateHeaders } from './utilities';
 
@@ -24,7 +24,7 @@ export const register = userData => dispatch => {
         };
         
         axios
-          .post(`${HOST}${CREATE_PORTFOLIO_URI}`, portfolioData, generateHeaders())
+          .post(`${HOST}${PORTFOLIO_URI}`, portfolioData, generateHeaders())
           
           .then(res => {
             dispatch(registerSuccessfully(res.data));

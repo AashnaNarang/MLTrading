@@ -13,13 +13,18 @@ const verifyCallback = (req, resolve, reject, requiredRights) => async (err, use
   if (requiredRights.length) {
     const userRights = roleRights.get(user.role);
     const hasRequiredRights = requiredRights.every((requiredRight) => userRights.includes(requiredRight));
+    console.log(hasRequiredRights);
     if (!hasRequiredRights) {
       let belongsToThem;
       if (req.params.portfolioId) {
+        console.log(req.params);
         portfolio = await portfolioService.getPortfolioById(req.params.portfolioId);
         belongsToThem = portfolio ? (portfolio.user == user.id) : false;
+        console.log(belongsToThem);
       } else {
+        console.log(req.params);
         belongsToThem = (req.params.userId == user.id) || (req.body.user == user.id) ;
+        console.log(belongsToThem);
       }
       if (!belongsToThem) {
         return reject(new ApiError(httpStatus.FORBIDDEN, 'Forbidden'));
