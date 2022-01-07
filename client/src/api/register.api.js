@@ -7,6 +7,7 @@ import { generateHeaders } from './utilities';
 export const register = userData => dispatch => {
   let initialFreeCash = userData.initialFreeCash;
   delete userData.initialFreeCash;
+
     axios
       .post(`${HOST}${REGISTER_URI}`, userData)
       

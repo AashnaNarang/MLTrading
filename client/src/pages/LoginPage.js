@@ -5,6 +5,7 @@ import { Redirect, withRouter } from 'react-router-dom';
 
 import { login } from '../api/login.api';
 import Login from '../components/Login.js';
+import Alert from '@material-ui/lab/Alert';
 
 class LoginPage extends Component {
   constructor() {
@@ -36,12 +37,19 @@ class LoginPage extends Component {
     return token ? (
       <Redirect to="/" user={user} />
     ) : (
-      <Login
-        onChange={e => this.onChange(e)}
-        onClick={e => this.onClick(e)}
-        email={email}
-        password={password}
-      />
+      <React.Fragment>
+        {!!user.errors &&
+          <Alert severity="error">
+            {user.errors.data.message}
+          </Alert>
+        }
+        <Login
+          onChange={e => this.onChange(e)}
+          onClick={e => this.onClick(e)}
+          email={email}
+          password={password}
+        />
+      </React.Fragment>
     );
   }
 }
