@@ -57,6 +57,8 @@ components:
           format: email
         portfolioType:
           type: string
+        profit:
+          type: number
         currPortfolioValue:
           type: number
         initialFreeCash:
@@ -73,6 +75,7 @@ components:
         user: 619308412ff24d3d28d7fe2b
         portfolioType: personal
         currPortfolioValue: 500.00
+        profit: 0
         initialFreeCash: 500.00
         freeCash: 500.00
         transactionCost: 1.50

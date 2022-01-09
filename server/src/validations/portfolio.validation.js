@@ -26,6 +26,12 @@ const getPortfolio = {
   }),
 };
 
+const getPortfolioUsingUserId = {
+  params: Joi.object().keys({
+    userId: Joi.string().required().custom(objectId),
+  }),
+};
+
 const updatePortfolio = {
   params: Joi.object().keys({
     portfolioId: Joi.required().custom(objectId),
@@ -34,6 +40,7 @@ const updatePortfolio = {
     .keys({
       portfolioType: Joi.string().valid("personal", "tfsa", "rrsp"),
       currPortfolioValue: Joi.number(),
+      profit: Joi.number(),
       initialFreeCash: Joi.number(),
       freeCash: Joi.number(),
       transactionCost: Joi.number(),

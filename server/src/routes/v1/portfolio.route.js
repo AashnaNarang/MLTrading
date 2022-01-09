@@ -3,6 +3,8 @@ const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
 const { portfolioValidation } = require('../../validations');
 const { portfolioController } = require('../../controllers');
+const userValidation = require('../../validations/user.validation');
+const userController = require('../../controllers/user.controller');
 
 const router = express.Router();
 
@@ -16,6 +18,10 @@ router
   .get(auth('getPortfolios'), validate(portfolioValidation.getPortfolio), portfolioController.getPortfolio)
   .patch(auth('managePortfolios'), validate(portfolioValidation.updatePortfolio), portfolioController.updatePortfolio)
   .delete(auth('managePortfolios'), validate(portfolioValidation.deletePortfolio), portfolioController.deletePortfolio);
+
+router
+  .route('/:userId')
+  .get(auth('getPortfolios'), validate(portfolioValidation.getPortfolioUsingUserId), portfolioController.getPortfolioUsingUserId)
 
 module.exports = router;
 
@@ -31,7 +37,7 @@ module.exports = router;
  * /portfolios:
  *   post:
  *     summary: Create a portfolio
- *     description: 
+ *     description:
  *     tags: [Portfolios]
  *     security:
  *       - bearerAuth: []
@@ -74,7 +80,7 @@ module.exports = router;
  *       "404":
  *         description: User with this ID does not exist
  *       "400":
- *         description: Initial Free Cash Value must be valid, positive number 
+ *         description: Initial Free Cash Value must be valid, positive number
  *
  *   get:
  *     summary: Get all portfolios
@@ -242,3 +248,35 @@ module.exports = router;
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  */
+
+/**
+ * @swagger
+ * /portfolios/{userId}:
+ *   get:
+ *     summary: Get a portfolio
+ *     description: Fetch portfolio using a user id. 
+ *     tags: [Portfolios]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Portfolio id using user id 
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/components/schemas/User'
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ */
+

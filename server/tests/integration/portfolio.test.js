@@ -20,6 +20,7 @@ describe('Portfolio routes', () => {
         portfolioType: 'personal',
         initialFreeCash: 50,
         transactionCost: 1.50,
+        profit: 0, 
       };
     });
 
@@ -40,6 +41,7 @@ describe('Portfolio routes', () => {
         initialFreeCash: 50,
         freeCash: 50, 
         transactionCost: 1.50,
+        profit: 0,
         currency: "USD"
       });
 
@@ -80,7 +82,8 @@ describe('Portfolio routes', () => {
         initialFreeCash: 50,
         freeCash: 50, 
         transactionCost: 1.50,
-        currency: "USD"
+        currency: "USD",
+        profit: 0
       });
 
       const dbPortfolio = await Portfolio.findById(res.body.id);
@@ -138,7 +141,8 @@ describe('Portfolio routes', () => {
         initialFreeCash: 50,
         freeCash: 50, 
         transactionCost: 1.50,
-        currency: "USD"
+        currency: "USD",
+        profit: 0
       });
     });
 
@@ -296,6 +300,7 @@ describe('Portfolio routes', () => {
         initialFreeCash: 50,
         freeCash: 50, 
         transactionCost: 1.50,
+        profit: 0,
         currency: "USD"
       });
     });
@@ -318,6 +323,7 @@ describe('Portfolio routes', () => {
         initialFreeCash: 600,
         freeCash: 500, 
         transactionCost: 1.50,
+        profit: 500,
         currency: "USD"
       });
     });
@@ -370,6 +376,54 @@ describe('Portfolio routes', () => {
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send()
         .expect(httpStatus.NOT_FOUND);
+    });
+  });
+
+  describe('GET /v1/portfolios/:userId', () => {
+    test('should return 200 if user is trying to get their own portfolio using a userId and the portfolio object if data is ok', async () => {
+      await insertUsers([userOne]);
+      await insertPortfolios([portfolioOne, portfolioTwo, portfolioThree])
+
+      const res = await request(app)
+        .get(`/v1/portfolios/${portfolioOne.user}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send()
+        .expect(httpStatus.OK);
+
+      expect(res.body).toEqual({
+        id: portfolioOne._id.toHexString(),
+        user: userOne._id.toHexString(),
+        portfolioType: 'personal',
+        currPortfolioValue: 50,
+        initialFreeCash: 50,
+        freeCash: 50, 
+        transactionCost: 1.50,
+        profit: 0,
+        currency: "USD"
+      });
+    });
+
+    test('should return 200 if admin is trying to get their own portfolio using a userId and the portfolio object if data is ok', async () => {
+      await insertUsers([userOne, admin]);
+      await insertPortfolios([portfolioOne, portfolioTwo, portfolioThree])
+
+      const res = await request(app)
+        .get(`/v1/portfolios/${portfolioThree.user}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send()
+        .expect(httpStatus.OK);
+
+      expect(res.body).toEqual({
+        id: portfolioThree._id.toHexString(),
+        user: admin._id.toHexString(),
+        portfolioType: 'tfsa',
+        currPortfolioValue: 510,
+        initialFreeCash: 600,
+        freeCash: 500, 
+        transactionCost: 1.50,
+        profit: 500,
+        currency: "USD"
+      });
     });
   });
 
@@ -449,6 +503,7 @@ describe('Portfolio routes', () => {
         initialFreeCash: 55,
         freeCash: 55, 
         transactionCost: 1.70,
+        profit: 0
       };
 
       const res = await request(app)
@@ -465,6 +520,7 @@ describe('Portfolio routes', () => {
           initialFreeCash: 55,
           freeCash: 55, 
           transactionCost: 1.70,
+          profit: 0, 
           currency: "USD"
       });
 
