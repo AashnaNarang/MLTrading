@@ -1,3 +1,4 @@
+const { min } = require('moment');
 const mongoose = require('mongoose');
 const validator = require('validator');
 const { toJSON, paginate } = require('./plugins');
@@ -21,6 +22,10 @@ const portfolioSchema = mongoose.Schema(
     currPortfolioValue: {
       type: Number, 
       required: false
+    },
+    profit: {
+      type: Number, 
+      required: true
     },
     initialFreeCash: {
       type: Number, 

@@ -11,7 +11,9 @@ const ApiError = require('../utils/ApiError');
 const createPortfolio = async (portfolioBody) => {
   await validateUserId(portfolioBody.user, "User with this ID does not exist");
   await validateInitialFreeCash(portfolioBody.initialFreeCash, "Initial Free Cash Value must be valid, positive number.");
-  portfolioBody.freeCash = portfolioBody.initialFreeCash
+  portfolioBody.freeCash = portfolioBody.initialFreeCash;
+  portfolioBody.currPortfolioValue = portfolioBody.initialFreeCash;
+  portfolioBody.profit = 0;
   return Portfolio.create(portfolioBody);
 };
 

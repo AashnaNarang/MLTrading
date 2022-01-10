@@ -13,6 +13,7 @@ describe('Portfolio model', () => {
         initialFreeCash: 50,
         freeCash: 50, 
         transactionCost: 1.50,
+        profit: 0, 
         currency: "USD"
       };
     });
