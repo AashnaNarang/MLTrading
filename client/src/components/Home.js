@@ -1,31 +1,51 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import GreyBox from './GreyBox';
+import '../Home.css'; 
 
 const Home = props => {
+  let content = (
+    <div className="flex-row">
+      <div className="flex-col">
+          <body className="portfolioValue-subtitle"> portfolio value </body>
+          <body className="portfolioValue-amount"> ${props.portfolio.currPortfolioValue} </body>
+      </div>
+      <div className="flex-col">
+        <body className="freeCash-subtitle"> available to trade </body>
+        <body className="freeCash-amount"> ${props.portfolio.freeCash} </body>
+      </div>
+    </div>
+  )
+  
   return (
-    <div style={{ height: '75vh' }} className="container valign-wrapper">
-      <div className="row">
-        <div className="col s12 center-align">
-          <h4>
-            <b>User currently logged in</b>
-          </h4>
-          <br />
-          <div className="col s6">
-            <Link
-              to="/"
-              onClick={props.logout}
-              style={{
-                width: '140px',
-                borderRadius: '3px',
-                letterSpacing: '1.5px',
-              }}
-              className="btn btn-large waves-effect waves-light hoverable blue accent-3"
-            >
-              Logout
-            </Link>
+    <div>
+      <div>
+        <div className="flex-col-main">
+          <div className="hello-row">
+            <h2 className="hello"> Hello, you have made  </h2>
+            <h2 className="profit"> ${props.portfolio.profit}</h2>
           </div>
+          <br />
+          <div>
+            <br/>
+            <br/>
+          </div>
+          <GreyBox title="Your Information" content={content} />
         </div>
       </div>
+      <br/>
+      <Link
+        to="/"
+        onClick={props.logout}
+        style={{
+          color: 'black',
+          letterSpacing: '1.5px',
+          fontFamily: 'Inter'
+        }}
+        className="btn-link hoverable "
+      >
+        Logout
+      </Link>
     </div>
   );
 };

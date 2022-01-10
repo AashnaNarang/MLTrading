@@ -7,7 +7,8 @@ export const SET_USER_TOKEN = 'SET_USER_TOKEN';
 // Server URI
 export const LOGIN_URI = '/v1/auth/login';
 export const REGISTER_URI = '/v1/auth/register';
-export const CREATE_PORTFOLIO_URI = '/v1/portfolios';
+export const PORTFOLIO_URI = '/v1/portfolios';
+export const PORTFOLIO_USER_URI = '/v1/portfolios/user';
 
 // Auth
 export const LOGIN_FAILED = 'LOGIN_FAILED';

@@ -7,7 +7,8 @@ const createPortfolio = {
     portfolioType: Joi.string().valid("personal", "tfsa", "rrsp"),
     initialFreeCash: Joi.number().required(),
     transactionCost: Joi.number(),
-    currency: Joi.string().valid("USD")
+    currency: Joi.string().valid("USD"),
+    profit: Joi.number() 
   }),
 };
 
@@ -60,4 +61,5 @@ module.exports = {
   getPortfolio,
   updatePortfolio,
   deletePortfolio,
+  getPortfolioUsingUserId,
 };

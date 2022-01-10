@@ -20,7 +20,7 @@ router
   .delete(auth('managePortfolios'), validate(portfolioValidation.deletePortfolio), portfolioController.deletePortfolio);
 
 router
-  .route('/:userId')
+  .route('/user/:userId')
   .get(auth('getPortfolios'), validate(portfolioValidation.getPortfolioUsingUserId), portfolioController.getPortfolioUsingUserId)
 
 module.exports = router;
@@ -166,7 +166,7 @@ module.exports = router;
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/User'
+ *                $ref: '#/components/schemas/Portfolio'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -251,7 +251,7 @@ module.exports = router;
 
 /**
  * @swagger
- * /portfolios/{userId}:
+ * /portfolios/user/{userId}:
  *   get:
  *     summary: Get a portfolio
  *     description: Fetch portfolio using a user id. 
@@ -260,7 +260,7 @@ module.exports = router;
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: userId
  *         required: true
  *         schema:
  *           type: string

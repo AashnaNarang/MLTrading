@@ -9,7 +9,7 @@ export const login = userData => dispatch => {
     .post(`${HOST}${LOGIN_URI}`, userData)
     .then(res => {
       // Set userToken to Local Storage
-      setTokenToLocalStorage(USER_TOKEN, res.data.token).then(() => {
+      setTokenToLocalStorage(USER_TOKEN, res.data.tokens.access.token).then(() => {
         dispatch(loginSuccessfully(res.data));
         window.location.href = '/';
       });
