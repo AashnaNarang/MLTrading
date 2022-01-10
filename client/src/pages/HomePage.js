@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import axios from 'axios';
 
-import { USER_TOKEN, HOST, PORTFOLIO_URI } from '../constants';
+import { USER_TOKEN, HOST, PORTFOLIO_USER_URI } from '../constants';
 import { logout } from '../store/actions/auth.action';
 import jwt_decode from "jwt-decode"
 import { getTokenFromLocalStorage } from '../utils';
@@ -18,18 +18,16 @@ class HomePage extends Component {
     this.state = {
       userId: '',
       portfolio: {
-        user: '619308412ff24d3d28d7fe2b', 
-        portfolioType: 'personal', 
-        currPortfolioValue: '500.00', 
-        initialFreeCash: '150.00',
-        freeCash: '150.00', 
-        transactionCost: '1.5', 
-        profit: '100.00'
+        user: '', 
+        portfolioType: '', 
+        currPortfolioValue: '', 
+        initialFreeCash: '',
+        freeCash: '', 
+        transactionCost: '', 
+        profit: ''
       },
     };
 
-    // console.log(jwt_decode(getTokenFromLocalStorage(USER_TOKEN)));
-    // this.state.userId = jwt_decode(getTokenFromLocalStorage(USER_TOKEN));
     this.onClick = this.onClick.bind(this);
   }
 
@@ -39,24 +37,24 @@ class HomePage extends Component {
     this.props.logout();
   };
 
+  componentDidMount() {
+    var decodedHeader = jwt_decode(getTokenFromLocalStorage(USER_TOKEN), { header: false });
+    this.setState({userId: decodedHeader.sub});
+
+    axios
+      .get(`${HOST}${PORTFOLIO_USER_URI}/${decodedHeader.sub}`, generateHeaders())
+      .then(res => {
+        this.setState({portfolio: res.data});
+      })
+      .catch(err => {
+        console.log(`error: ${err.message}`);
+        // dispatch(registerFailed(err));
+    });
+  }
 
   render() {
     const { user } = this.props || {};
     let loggedIn = user && user.token
-    if (loggedIn) {
-      var decodedHeader = jwt_decode(getTokenFromLocalStorage(USER_TOKEN), { header: false });
-      this.state.userId = decodedHeader.sub;
-
-      // axios
-      // .get(`${HOST}${PORTFOLIO_URI}/${decodedHeader.sub}`, generateHeaders())
-      // .then(res => {
-      //   this.state.portfolio = res.data.portfolio;
-      // })
-      // .catch(err => {
-      //   console.log(`error: ${err.message}`);
-      //   // dispatch(registerFailed(err));
-      // });
-    }
 
     return loggedIn ? (
       <Home logout={e => this.onClick(e)} userId={this.state.userId} portfolio={this.state.portfolio} />
@@ -64,8 +62,7 @@ class HomePage extends Component {
       <Landing />
     );
   }
-}
-
+} 
 
 
 // Store

@@ -39,7 +39,8 @@ describe('Portfolio routes', () => {
         user: userOne._id.toHexString(),
         portfolioType: 'personal',
         initialFreeCash: 50,
-        freeCash: 50, 
+        freeCash: 50,
+        currPortfolioValue: 50,
         transactionCost: 1.50,
         profit: 0,
         currency: "USD"
@@ -82,6 +83,7 @@ describe('Portfolio routes', () => {
         initialFreeCash: 50,
         freeCash: 50, 
         transactionCost: 1.50,
+        currPortfolioValue: 50,
         currency: "USD",
         profit: 0
       });
@@ -385,7 +387,7 @@ describe('Portfolio routes', () => {
       await insertPortfolios([portfolioOne, portfolioTwo, portfolioThree])
 
       const res = await request(app)
-        .get(`/v1/portfolios/${portfolioOne.user}`)
+        .get(`/v1/portfolios/user/${portfolioOne.user}`)
         .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send()
         .expect(httpStatus.OK);
@@ -408,7 +410,7 @@ describe('Portfolio routes', () => {
       await insertPortfolios([portfolioOne, portfolioTwo, portfolioThree])
 
       const res = await request(app)
-        .get(`/v1/portfolios/${portfolioThree.user}`)
+        .get(`/v1/portfolios/user/${portfolioThree.user}`)
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send()
         .expect(httpStatus.OK);
