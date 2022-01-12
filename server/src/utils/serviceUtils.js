@@ -1,5 +1,5 @@
 const ApiError = require("./ApiError");
-const { User } = require("../models");
+const { User, Portfolio } = require("../models");
 const httpStatus = require("http-status");
 
 /**
@@ -16,14 +16,36 @@ const validateUserId = async (userId, errorMessage) => {
   }
 };
 
+/**
+ * Validates if initial free cash is a positive number
+ * @param {Number} initialFreeCash - Initial free cash
+ * @param {string} errorMessage - The relevant error message
+ * @throws {ApiError} - if the ID does not exist in the mongoDB database
+ * @returns void
+ */
 const validateInitialFreeCash = async (initialFreeCash, errorMessage) => {
   if (initialFreeCash < 0) {
     throw new ApiError(httpStatus.BAD_REQUEST, errorMessage);
   }
 };
 
+/**
+ * Validates id from portfolio collection
+ * @param {ObjectId} userId - The portfolio id
+ * @param {string} errorMessage - The relevant error message
+ * @throws {ApiError} - if the ID does not exist in the mongoDB database
+ * @returns void
+ */
+ const validatePortfolioId = async (portfolioId, errorMessage) => {
+  const portfolio = await Portfolio.findById(portfolioId);
+  if (!portfolio) {
+    throw new ApiError(httpStatus.NOT_FOUND, errorMessage);
+  }
+};
+
 module.exports = {
     validateUserId,
-    validateInitialFreeCash
+    validateInitialFreeCash,
+    validatePortfolioId
   };
   
