@@ -81,6 +81,24 @@ components:
         transactionCost: 1.50
         currency: USD
 
+    PortfolioValue:
+      type: object
+      properties:
+        id:
+          type: string
+        portfolioId:
+          type: string
+        portfolioValue:
+          type: number
+        createdAt:
+          type: date
+      example:
+        id: 5ebac534954b54139806c112
+        portfolioId: 619308412ff24d3d28d7fe2b
+        portfolioValue: 500.00
+        createdAt: 2021-07-26T03:05:35.007Z
+        updatedAt: 2021-07-26T03:05:35.007Z
+
   responses:
     DuplicateEmail:
       description: Email already taken

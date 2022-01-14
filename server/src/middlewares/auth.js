@@ -2,7 +2,8 @@ const passport = require('passport');
 const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const { roleRights } = require('../config/roles');
-const { portfolioService } = require('../services')
+const { portfolioService } = require('../services');
+const mongoose = require('mongoose');
 
 const verifyCallback = (req, resolve, reject, requiredRights) => async (err, user, info) => {
   if (err || info || !user) {
@@ -16,8 +17,13 @@ const verifyCallback = (req, resolve, reject, requiredRights) => async (err, use
     if (!hasRequiredRights) {
       let belongsToThem;
       if (req.params.portfolioId) {
-        portfolio = await portfolioService.getPortfolioById(req.params.portfolioId);
-        belongsToThem = portfolio ? (portfolio.user == user.id) : false;
+        if(mongoose.Types.ObjectId.isValid(req.params.portfolioId)) {
+          portfolio = await portfolioService.getPortfolioById(req.params.portfolioId);
+          belongsToThem = portfolio ? (portfolio.user == user.id) : false;
+        } else {
+          return reject(new ApiError(httpStatus.BAD_REQUEST, 'Invalid mongo id'));
+        }
+        
       } else {
         belongsToThem = (req.params.userId == user.id) || (req.body.user == user.id) ;
       }
