@@ -10,6 +10,7 @@ const ApiError = require('../utils/ApiError');
  */
 const addPortfolioValue = async (portfolioBody) => {
   await validatePortfolioId(portfolioBody.portfolioId, "Portfolio this ID does not exist");
+  portfolioBody.dateAdded = new Date();
   return PortfolioValues.create(portfolioBody);
 };
 
@@ -21,7 +22,7 @@ const addPortfolioValue = async (portfolioBody) => {
 const getPortfoliosById = async (portfolioId) => {
   const oneYearAgo = new Date().setFullYear(new Date().getFullYear() - 1);
   const portfolioValues = await PortfolioValues.find({portfolioId: portfolioId, 
-    createdAt: {$gte: oneYearAgo}});
+    dateAdded: {$gte: oneYearAgo}});
   return portfolioValues;
 };
 
