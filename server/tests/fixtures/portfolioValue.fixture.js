@@ -7,18 +7,21 @@ const portfolioValueOne = {
     _id: mongoose.Types.ObjectId(),
     portfolioId: portfolioOne._id,
     portfolioValue: 50,
+    dateAdded: new Date(new Date().setMonth(new Date().getMonth() - 3))
 };
 
 const portfolioValueTwo = {
     _id: mongoose.Types.ObjectId(),
     portfolioId: portfolioOne._id,
     portfolioValue: 50,
+    dateAdded: new Date(new Date().setFullYear(new Date().getFullYear() - 2))
 };
 
 const portfolioValueThree = {
     _id: mongoose.Types.ObjectId(),
     portfolioId: portfolioTwo._id,
     portfolioValue: 50,
+    dateAdded: new Date()
 };
 
 const insertPortfolioValues = async (portfolioValues) => {

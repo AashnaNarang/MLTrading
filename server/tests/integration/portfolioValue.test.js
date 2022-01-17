@@ -36,6 +36,7 @@ describe('Portfolio Values routes', () => {
         id: expect.anything(),
         portfolioId: portfolioOne._id.toHexString(),
         portfolioValue: 150,
+        dateAdded: expect.anything()
       });
 
       const dbPortfolioValue = await PortfolioValues.findById(res.body.id);
@@ -74,32 +75,31 @@ describe('Portfolio Values routes', () => {
         id: portfolioValueOne._id.toHexString(),
         portfolioId: portfolioOne._id.toHexString(),
         portfolioValue: 50,
+        dateAdded: expect.anything()
       });
     });
 
-    // commented out, still need to figure out how to deal with createdAt
-    // test('should return portfolio values that are within the last year for a portfolio', async () => {
-    //     await insertUsers([userOne]);
-    //     await insertPortfolios([portfolioOne, portfolioTwo]);
-    //     await insertPortfolioValues([portfolioValueOne, portfolioValueTwo, portfolioValueThree]);
-    //     portfolioValueOne.createdAt = new Date(new Date().setFullYear(new Date().getFullYear() - 2));
-    //     portfolioValueTwo.createdAt = new Date(new Date().setMonth(new Date().getMonth() - 3));
-    //     console.log(portfolioValueOne)
-    //     console.log(portfolioValueTwo)
+    test('should return portfolio values that are within the last year for a portfolio', async () => {
+        await insertUsers([userOne]);
+        await insertPortfolios([portfolioOne, portfolioTwo]);
+        await insertPortfolioValues([portfolioValueOne, portfolioValueTwo, portfolioValueThree]);
+        portfolioOne.dateAdded = new Date(new Date().setMonth(new Date().getMonth() - 3));
+        portfolioTwo.dateAdded = new Date(new Date().setFullYear(new Date().getFullYear() - 2));
+        
+        const res = await request(app)
+          .get(`/v1/values/${portfolioOne._id}`)
+          .set('Authorization', `Bearer ${userOneAccessToken}`)
+          .send()
+          .expect(httpStatus.OK);
   
-    //     const res = await request(app)
-    //       .get(`/v1/values/${portfolioOne._id}`)
-    //       .set('Authorization', `Bearer ${userOneAccessToken}`)
-    //       .send()
-    //       .expect(httpStatus.OK);
-  
-    //     expect(res.body).toHaveLength(1);
-    //     expect(res.body[0]).toEqual({
-    //       id: portfolioValueOne._id.toHexString(),
-    //       portfolioId: portfolioOne._id.toHexString(),
-    //       portfolioValue: 50,
-    //     });
-    //   });
+        expect(res.body).toHaveLength(1);
+        expect(res.body[0]).toEqual({
+          id: portfolioValueOne._id.toHexString(),
+          portfolioId: portfolioOne._id.toHexString(),
+          portfolioValue: 50,
+          dateAdded: expect.anything()
+        });
+      });
 
     test('should return 401 error if access token is missing', async () => {
       await insertUsers([userOne]);

@@ -14,6 +14,10 @@ const portfolioValuesSchema = mongoose.Schema(
       type: Number, 
       required: false
     },
+    dateAdded: {
+      type: Date, 
+      required: true
+    }
   },
   {
     timestamps: true,
