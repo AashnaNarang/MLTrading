@@ -1,10 +1,11 @@
 const httpStatus = require('http-status');
-const { PortfolioValues } = require('../models');
+const { PortfolioValues, Portfolio } = require('../models');
 const { validatePortfolioId } = require("../utils/serviceUtils");
+const { portfolioService } = require('../services');
 const ApiError = require('../utils/ApiError');
 
 /**
- * Create a user
+ * Create a portfolio value
  * @param {Object} portfolioBody
  * @returns {Promise<Value>}
  */
@@ -15,7 +16,7 @@ const addPortfolioValue = async (portfolioBody) => {
 };
 
 /**
- * Query for portfolios
+ * Query for portfolio values
  * @param {Object} filter - Portfolio Id
  * @returns {Promise<QueryResult>}
  */
@@ -26,7 +27,36 @@ const getPortfoliosById = async (portfolioId) => {
   return portfolioValues;
 };
 
+/**
+ * Job to iterate over portfolios, calculate portfolio values and save to db
+ */
+const addPortfolioValuesJob = async () => {
+  Portfolio.find({} , (err, portfolios) => {
+    if (err) {
+        console.log(err);
+        throw new Error("Failed to get portfolios in addPortfolioValuesJob");
+    }
+    portfolios.map(async (portfolio) => {
+        var portfolioValue;
+        portfolioValue = portfolio.freeCash;
+        // go through securities model filter by portfolio.id
+        // calc value of securities and add 
+        // note: can remove all asyncs and awaits and itll work still
+        await addPortfolioValue({
+            portfolioId: portfolio.id, 
+            portfolioValue: portfolioValue
+        });
+        await portfolioService.updatePortfolioById(portfolio.id, {
+          currPortfolioValue: portfolioValue, 
+          profit: (portfolioValue - portfolio.initialFreeCash)
+        });
+        console.log(portfolio);
+    })
+  });
+}
+
 module.exports = {
   addPortfolioValue,
-  getPortfoliosById
+  getPortfoliosById,
+  addPortfolioValuesJob
 };
