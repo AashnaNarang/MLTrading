@@ -10,6 +10,9 @@ setupTestDB();
 
 describe('AddPortfolioValuesJob', () => {
     describe('add portfolio values job', () => {
+        test('placeholder', async () => {
+            expect(1).toEqual(1);
+        });
         // test('addPortfolioValuesJob should add new portfolio values for each portfolio', async () => {
         //     await insertUsers([userOne, userTwo, admin]);
         //     await insertPortfolios([portfolioOne, portfolioTwo, portfolioThree]);
