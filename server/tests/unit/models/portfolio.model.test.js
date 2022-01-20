@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const { Portfolio } = require('../../../src/models');
 
 describe('Portfolio model', () => {
-  describe('User validation', () => {
+  describe('Portfolio validation', () => {
     let newPortfolio;
     beforeEach(() => {
       newPortfolio = {
@@ -18,7 +18,7 @@ describe('Portfolio model', () => {
       };
     });
 
-    test('should correctly validate a valid user', async () => {
+    test('should correctly validate a valid portfolio', async () => {
       await expect(new Portfolio(newPortfolio).validate()).resolves.toBeUndefined();
     });
 
@@ -32,7 +32,7 @@ describe('Portfolio model', () => {
       await expect(new Portfolio(newPortfolio).validate()).rejects.toThrow();
     });
 
-    test('should throw a validation error if initialFreeCash is a negative value', async () => {
+    test('should throw a validation error if transactionCost is a negative value', async () => {
       newPortfolio.transactionCost = -5;
       await expect(new Portfolio(newPortfolio).validate()).rejects.toThrow();
     });
