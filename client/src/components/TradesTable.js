@@ -10,44 +10,37 @@ const columns = [
   {
     field: 'action',
     headerName: 'Action',
-    headerClassName: 'table-header',
-    width: 170,
+    flex: 1,
   },
   {
     field: 'security',
     headerName: 'Security',
-    headerClassName: 'table-header',
-    width: 170,
+    flex: 1,
   },
   {
     field: 'price',
     headerName: 'Price',
-    headerClassName: 'table-header',
-    width: 170,
+    flex: 1,
   },
   {
     field: 'shares',
     headerName: 'Shares',
-    headerClassName: 'table-header',
-    width: 170,
+    flex: 1,
   },
   {
     field: 'transactionFee',
     headerName: 'Transaction Fee',
-    headerClassName: 'table-header',
-    width: 180,
+    flex: 1,
   },
   {
     field: 'profit',
     headerName: 'Profit',
-    headerClassName: 'table-header',
-    width: 170,
+    flex: 1,
   },
   {
     field: 'date',
     headerName: 'Date',
-    headerClassName: 'table-header',
-    width: 170,
+    flex: 1
   },
 
 ];
@@ -82,14 +75,13 @@ class TradesTable extends Component {
     return (
       <>
         <h5 style={{fontFamily: "Inter", fontWeight: 600, fontSize: "24px" }}>Trading History</h5>
-        <div style={{ height: 400, width: '100%' }}>
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            pageSize={5}
-            rowsPerPageOptions={[5]}
-          />
-        </div>
+        <DataGrid
+          autoHeight
+          rows={rows}
+          columns={columns}
+          pageSize={5}
+          rowsPerPageOptions={[5]}
+        />
       </>
     )
   }

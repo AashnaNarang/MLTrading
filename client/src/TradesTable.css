@@ -2,7 +2,7 @@
     border: unset !important;
 }
 
-.table-header{
+.MuiDataGrid-columnHeaderTitle{
     font-family: Inter;
     font-weight: bold !important;
 }
