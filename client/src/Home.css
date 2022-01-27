@@ -5,8 +5,7 @@
 .hello-row {
     display: flex;
     flex-direction: row;
-    align-items: center;
-    gap: 18px;
+    justify-content: center;
 }
 
 .profit {
@@ -21,15 +20,15 @@
 .hello {
     font-family: Inter;
     font-size: 60px;
-    font-style: normal;
     font-weight: 600;
     line-height: 73px;
     letter-spacing: 0em;
+    margin-right: 12px;
 }
 
 .portfolioValue-subtitle {
     font-size: 16px;
-    font-family: "Inter";
+    font-family: Inter;
     color: #263238;
     font-weight: 400;
     opacity: 0.54;
@@ -37,14 +36,14 @@
 }
 .portfolioValue-amount {
     font-size: 60px;
-    font-family: "Inter";
+    font-family: Inter;
     color: #0D7404;
     font-weight: 600;
 }
 
 .freeCash-subtitle {
     font-size: 16px;
-    font-family: "Inter";
+    font-family: Inter;
     color: #263238;
     font-weight: 400;
     opacity: 0.54;
@@ -52,7 +51,7 @@
 }
 .freeCash-amount {
     font-size: 60px;
-    font-family: "Inter";
+    font-family: Inter;
     color: #0D7404;
     font-weight: 600;
 }
@@ -70,23 +69,10 @@
 .flex-col {
     display: flex;
     flex-direction: column;
-    /* flex-flow: column wrap; */
-    align-items: left;
-    gap: 0px;
-    /* height: 145px; */
-    overflow: hidden;
 }
 
 .flex-col-main {
     display: flex;
     flex-direction: column;
-    /* flex-flow: column wrap; */
-    align-items: center;
-    gap: 0px;
-    /* height: 145px; */
-    overflow: hidden;
+    margin: 48px
 }
-
-/* .wrapper {
-    overflow: hidden;
-} */

@@ -1,0 +1,8 @@
+.MuiDataGrid-root{
+    border: unset !important;
+}
+
+.table-header{
+    font-family: Inter;
+    font-weight: bold !important;
+}
