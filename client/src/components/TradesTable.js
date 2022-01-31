@@ -10,37 +10,37 @@ const columns = [
   {
     field: 'action',
     headerName: 'Action',
-    flex: 1,
+    width: 170,
   },
   {
     field: 'security',
     headerName: 'Security',
-    flex: 1,
+    width: 170,
   },
   {
     field: 'price',
     headerName: 'Price',
-    flex: 1,
+    width: 170,
   },
   {
     field: 'shares',
     headerName: 'Shares',
-    flex: 1,
+    width: 170,
   },
   {
     field: 'transactionFee',
     headerName: 'Transaction Fee',
-    flex: 1,
+    width: 180,
   },
   {
     field: 'profit',
     headerName: 'Profit',
-    flex: 1,
+    width: 170,
   },
   {
     field: 'date',
     headerName: 'Date',
-    flex: 1
+    width: 170
   },
 
 ];
@@ -74,7 +74,7 @@ class TradesTable extends Component {
     const { page, rowsPerPage } = this.state
     return (
       <>
-        <h5 style={{fontFamily: "Inter", fontWeight: 600, fontSize: "24px" }}>Trading History</h5>
+        <h5 className='heading'>Trading History</h5>
         <DataGrid
           autoHeight
           rows={rows}
