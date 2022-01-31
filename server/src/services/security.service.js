@@ -35,7 +35,8 @@ const querySecurities = async (filter, options) => {
  * @returns {Promise<Security>}
  */
 const getSecurityById = async (id) => {
-  return Security.findById(id);
+  let security = await Security.findById(id);
+  return security;
 };
 
 // /**

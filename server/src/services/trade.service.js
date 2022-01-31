@@ -1,5 +1,6 @@
 const { Trade } = require('../models');
-const { portfolioService, securityService } = require('../services');
+const { portfolioService } = require('../services');
+const securityService = require('./security.service');
 const { validatePortfolioId, validateSecurityId } = require("../utils/serviceUtils");
 
 /**
@@ -11,30 +12,17 @@ const addTrade = async (tradeBody) => {
   await validatePortfolioId(tradeBody.portfolio, "Portfolio with this ID does not exist");
   await validateSecurityId(tradeBody.security, "Security with this ID does not exist");
   let portfolio = await portfolioService.getPortfolioById(tradeBody.portfolio);
-
+  let security = await securityService.getSecurityById(tradeBody.security);
+  tradeBody.securityCode = security.securityCode;
   tradeBody.transactionCost = portfolio.transactionCost;
+
   if (tradeBody.action == "Sold") {
-    let security = await securityService.getSecurityById(tradeBody.security);
     tradeBody.profit = tradeBody.price - security.avgPrice;
   } else {
     tradeBody.profit = 0.00;
   }
   tradeBody.dateTraded = new Date();
   return Trade.create(tradeBody);
-};
-
-/**
- * Query for trades
- * @param {Object} filter - Portfolio Id
- * @returns {Promise<QueryResult>}
- */
-const getTradesByPortfolioId = async (portfolioId) => {
-  const trades = await Trade.find({portfolioId: portfolioId});
-  await trades.forEach(async (trade) =>  {
-    let security = await securityService.getSecurityById(tradeBody.securityId);
-    trade.securityCode = security.securityCode;
-  });
-  return trades;
 };
 
 /**
@@ -54,6 +42,5 @@ const getTradesByPortfolioId = async (portfolioId) => {
 
 module.exports = {
   addTrade,
-  getTradesByPortfolioId,
   queryTrades
 };

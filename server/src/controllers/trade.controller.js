@@ -9,11 +9,6 @@ const addTrade = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(trade);
 });
 
-const getTradesByPortfolioId = catchAsync(async (req, res) => {
-  const result = await tradeService.getTradesByPortfolioId(req.params.portfolioId);
-  res.send(result);
-});
-
 const getTrades = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['portfolio']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
@@ -23,6 +18,5 @@ const getTrades = catchAsync(async (req, res) => {
 
 module.exports = {
   addTrade, 
-  getTradesByPortfolioId,
   getTrades
 };

@@ -96,7 +96,7 @@ module.exports = router;
  *           type: integer
  *           minimum: 1
  *         default: 10
- *         description: Maximum number of users
+ *         description: Maximum number of trades
  *       - in: query
  *         name: page
  *         schema:

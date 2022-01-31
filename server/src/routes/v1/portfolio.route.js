@@ -106,7 +106,7 @@ module.exports = router;
  *           type: integer
  *           minimum: 1
  *         default: 10
- *         description: Maximum number of users
+ *         description: Maximum number of portfolios
  *       - in: query
  *         name: page
  *         schema:
@@ -271,7 +271,7 @@ module.exports = router;
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/User'
+ *                $ref: '#/components/schemas/Portfolio'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":

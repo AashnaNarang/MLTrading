@@ -49,7 +49,7 @@ const updateSecurity = {
 
 const deleteSecurity = {
   params: Joi.object().keys({
-    securityid: Joi.string().custom(objectId),
+    securityId: Joi.string().custom(objectId),
   }),
 };
 
