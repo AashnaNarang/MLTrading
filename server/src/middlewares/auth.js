@@ -16,7 +16,6 @@ const verifyCallback = (req, resolve, reject, requiredRights) => async (err, use
     const hasRequiredRights = requiredRights.every((requiredRight) => userRights.includes(requiredRight));
     if (!hasRequiredRights) {
       let belongsToThem;
-      console.log(req.params);
       const portfolioId = req.params.portfolioId || req.query.portfolio;
       if (portfolioId) {
         if(mongoose.Types.ObjectId.isValid(portfolioId)) {
