@@ -34,7 +34,6 @@ describe('Portfolio routes', () => {
         .expect(httpStatus.CREATED);
 
       expect(res.body).toEqual({
-        // currPortfolioValue is null so it does not appear in the response
         id: expect.anything(),
         user: userOne._id.toHexString(),
         portfolioType: 'personal',

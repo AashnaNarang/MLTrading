@@ -18,12 +18,12 @@ class HomePage extends Component {
     this.state = {
       userId: '',
       portfolio: {
-        user: '', 
-        portfolioType: '', 
-        currPortfolioValue: '', 
+        user: '',
+        portfolioType: '',
+        currPortfolioValue: '',
         initialFreeCash: '',
-        freeCash: '', 
-        transactionCost: '', 
+        freeCash: '',
+        transactionCost: '',
         profit: ''
       },
     };
@@ -38,21 +38,21 @@ class HomePage extends Component {
   };
 
   componentDidMount() {
-      var token = getTokenFromLocalStorage(USER_TOKEN);
-      if (token) {
-        var decodedHeader = jwt_decode(token, { header: false });
-        this.setState({userId: decodedHeader.sub});
-    
-        axios
-          .get(`${HOST}${PORTFOLIO_USER_URI}/${decodedHeader.sub}`, generateHeaders())
-          .then(res => {
-            this.setState({portfolio: res.data});
-          })
-          .catch(err => {
-            console.log(`error: ${err.message}`);
-            // dispatch(registerFailed(err));
+    var token = getTokenFromLocalStorage(USER_TOKEN);
+    if (token) {
+      var decodedHeader = jwt_decode(token, { header: false });
+      this.setState({ userId: decodedHeader.sub });
+
+      axios
+        .get(`${HOST}${PORTFOLIO_USER_URI}/${decodedHeader.sub}`, generateHeaders())
+        .then(res => {
+          this.setState({ portfolio: res.data });
+        })
+        .catch(err => {
+          console.log(`error: ${err.message}`);
+          // dispatch(registerFailed(err));
         });
-      }
+    }
   }
 
   render() {
@@ -65,7 +65,7 @@ class HomePage extends Component {
       <Landing />
     );
   }
-} 
+}
 
 
 // Store

@@ -1,14 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import GreyBox from './GreyBox';
-import '../Home.css'; 
+import '../Home.css';
+import PortfolioGraph from './PortfolioGraph';
 
 const Home = props => {
   let content = (
     <div className="flex-row">
       <div className="flex-col">
-          <body className="portfolioValue-subtitle"> portfolio value </body>
-          <body className="portfolioValue-amount"> ${props.portfolio.currPortfolioValue} </body>
+        <body className="portfolioValue-subtitle"> portfolio value </body>
+        <body className="portfolioValue-amount"> ${props.portfolio.currPortfolioValue} </body>
       </div>
       <div className="flex-col">
         <body className="freeCash-subtitle"> available to trade </body>
@@ -16,7 +17,7 @@ const Home = props => {
       </div>
     </div>
   )
-  
+
   return (
     <div>
       <div>
@@ -27,13 +28,14 @@ const Home = props => {
           </div>
           <br />
           <div>
-            <br/>
-            <br/>
+            <br />
+            <br />
           </div>
           <GreyBox title="Your Information" content={content} />
+          <PortfolioGraph title="Portfolio Graph" portfolioId={props.portfolio.id}/>
         </div>
       </div>
-      <br/>
+      <br />
       <Link
         to="/"
         onClick={props.logout}

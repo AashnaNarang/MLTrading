@@ -9,6 +9,7 @@ export const LOGIN_URI = '/v1/auth/login';
 export const REGISTER_URI = '/v1/auth/register';
 export const PORTFOLIO_URI = '/v1/portfolios';
 export const PORTFOLIO_USER_URI = '/v1/portfolios/user';
+export const PORTFOLIO_VALUES_URI = '/v1/values';
 
 // Auth
 export const LOGIN_FAILED = 'LOGIN_FAILED';
