@@ -48,17 +48,6 @@ const columns = [
 
 ];
 
-const rows = [
-  { id: 0, action: "Purchased", security: 'TSLA', price: 755.35, shares: 5, transactionFee: 3.50, profit: null, date: "10/10/2021" },
-  { id: 1, action: "Sold", security: 'AAPL', price: 1345.90, shares: 2, transactionFee: 3.50, profit: 200.05, date: "03/10/2021" },
-  { id: 2, action: "Purchased", security: 'TSLA', price: 755.87, shares: 3, transactionFee: 3.50, profit: null, date: "01/10/2021" },
-  { id: 3, action: "Purchased", security: 'AMZN', price: 3345.87, shares: 3, transactionFee: 2.50, profit: null, date: "23/09/2021" },
-  { id: 4, action: "Sold", security: 'SHOP', price: 1456.98, shares: 10, transactionFee: 2.50, profit: 24.56, date: "14/09/2021" },
-  { id: 5, action: "Purchased", security: 'TSLA', price: 755.35, shares: 5, transactionFee: 3.50, profit: null, date: "10/10/2021" },
-  { id: 6, action: "Purchased", security: 'TSLA', price: 755.35, shares: 5, transactionFee: 3.50, profit: null, date: "10/10/2021" },
-  { id: 7, action: "Purchased", security: 'TSLA', price: 755.35, shares: 5, transactionFee: 3.50, profit: null, date: "10/10/2021" },
-  { id: 8, action: "Purchased", security: 'TSLA', price: 755.35, shares: 5, transactionFee: 3.50, profit: null, date: "10/10/2021" },
-];
 
 class TradesTable extends Component {
   constructor(props) {
