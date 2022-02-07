@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 import '../TradesTable.css'
+import axios from "axios";
+import {HOST, SECURITY_URI, TRADES_URI} from "../constants";
+import {generateHeaders} from "../api/utilities";
 
 const columns = [
   {
@@ -13,7 +16,7 @@ const columns = [
     width: 170,
   },
   {
-    field: 'security',
+    field: 'securityCode',
     headerName: 'Security',
     width: 170,
   },
@@ -23,12 +26,12 @@ const columns = [
     width: 170,
   },
   {
-    field: 'shares',
+    field: 'sharesTraded',
     headerName: 'Shares',
     width: 170,
   },
   {
-    field: 'transactionFee',
+    field: 'transactionCost',
     headerName: 'Transaction Fee',
     width: 180,
   },
@@ -38,7 +41,7 @@ const columns = [
     width: 170,
   },
   {
-    field: 'date',
+    field: 'dateTraded',
     headerName: 'Date',
     width: 170
   },
@@ -62,22 +65,64 @@ class TradesTable extends Component {
     super(props);
     this.state = {
       page: 1,
-      rowsPerPage: 4,
+      rowCount: 0,
+      trades: [],
     };
   }
 
-  handleChangePage = (event, newPage) => {
-    this.setState({page: newPage});
-  };
+  componentDidUpdate(prevProps) {
+    const { page } = this.state
+    const { portfolioId } = this.props
+
+    if (prevProps.portfolioId !== portfolioId) {
+      this.getTrades(portfolioId, page)
+    }
+
+  }
+
+  getTrades = (portfolioId, page) => {
+    const tradeParams = {portfolio: portfolioId, sortBy: 'dateTraded:desc', limit: 5, page}
+    axios
+      .get(`${HOST}${TRADES_URI}`, {params: tradeParams, ...generateHeaders()})
+      .then(res => {
+        res.data.results = res.data.results.map((result) => {
+
+          const dateTraded = new Date(result.dateTraded)
+
+          return {
+            ...result,
+            dateTraded : ('0' + dateTraded.getDate()).slice(-2) + '/'
+              + ('0' + (dateTraded.getMonth()+1)).slice(-2) + '/'
+              + dateTraded.getFullYear()
+          }
+        })
+        this.setState({trades: res.data.results, rowCount: res.data.totalResults});
+      })
+      .catch(err => {
+        console.log(`error: ${err.message}`);
+      });
+  }
+
+  onPageChange = (page)  => {
+    const { portfolioId } = this.props
+
+    this.setState({page: page + 1})
+
+    this.getTrades(portfolioId, page+1)
+  }
 
   render() {
-    const { page, rowsPerPage } = this.state
+    const { page, trades, rowCount } = this.state
     return (
       <>
         <h5 className='heading'>Trading History</h5>
         <DataGrid
+          onPageChange={(newPage) => this.onPageChange(newPage)}
+          pagination
+          paginationMode="server"
           autoHeight
-          rows={rows}
+          rowCount={rowCount}
+          rows={trades}
           columns={columns}
           pageSize={5}
           rowsPerPageOptions={[5]}

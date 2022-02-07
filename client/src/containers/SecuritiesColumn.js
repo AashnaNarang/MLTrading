@@ -71,10 +71,10 @@ class SecuritiesColumn extends Component {
           {securityBoxes}
         </div>
         {securities.length !==0 && <div className='sc-buttons'>
-          <Button variant="outlined" startIcon={<ArrowBack />} onClick={this.onPageChange(page-1)} disabled={page==1}>
+          <Button variant="outlined" startIcon={<ArrowBack />} onClick={this.onPageChange(page-1)} disabled={page===1}>
             Prev
           </Button>
-          <Button variant="outlined" endIcon={<ArrowForward />} onClick={this.onPageChange(page+1)} disabled={page==totalPages}>
+          <Button variant="outlined" endIcon={<ArrowForward />} onClick={this.onPageChange(page+1)} disabled={page===totalPages}>
             Next
           </Button>
         </div>}
