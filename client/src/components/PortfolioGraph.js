@@ -9,7 +9,6 @@ export default class PortfolioGraph extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userId: '',
       labels: [],
       datasets: []
     };
@@ -59,13 +58,15 @@ export default class PortfolioGraph extends React.Component {
 
     return (
       <div>
+        <h5 className='box-title'>
+          {"Portfolio Value"}
+        </h5>
         <Line
           data={{ labels, datasets }}
           options={
             {
               title: {
                 display: true,
-                text: 'Portfolio Value',
                 fontSize: 20,
               },
               legend: {
@@ -73,8 +74,8 @@ export default class PortfolioGraph extends React.Component {
                 position: 'right'
               }
             }}
-          width={window.innerWidth/2.5}
-          height={window.innerHeight/2.5}
+          width={window.innerWidth / 2.5}
+          height={window.innerHeight / 2.5}
         />
       </div>
     );

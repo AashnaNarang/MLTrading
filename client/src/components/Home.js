@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import GreyBox from './GreyBox';
 import '../Home.css';
+import '../GreyBox.css'; 
 import PortfolioGraph from './PortfolioGraph';
 
 const Home = props => {
@@ -32,7 +33,7 @@ const Home = props => {
             <br />
           </div>
           <GreyBox title="Your Information" content={content} />
-          <PortfolioGraph title="Portfolio Graph" portfolioId={props.portfolio.id}/>
+          <PortfolioGraph title="Portfolio Graph" portfolioId={props.portfolio.id} />
         </div>
       </div>
       <br />
