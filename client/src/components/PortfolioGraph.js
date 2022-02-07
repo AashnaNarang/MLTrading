@@ -28,7 +28,7 @@ export default class PortfolioGraph extends React.Component {
             ];
             graphData.push(obj.portfolioValue);
             const time = new Date(obj.dateAdded);
-            const timeString = (monthNames[time.getMonth() + 1]) + ' ' + time.getDate() + ' ' + time.getFullYear();
+            const timeString = (monthNames[time.getMonth()]) + ' ' + time.getDate() + ' ' + time.getFullYear();
             graphLabels.push(timeString.toString());
           }
           this.setState({
