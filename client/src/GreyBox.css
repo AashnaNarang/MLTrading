@@ -1,8 +1,4 @@
 .box-title {
-    width: 230px;
-    height: 29px;
-    left: 114px;
-    top: 257px;
     font-family: Inter;
     font-style: normal;
     font-weight: 600;
@@ -14,5 +10,4 @@
 .flex {
     display: flex; 
     flex-direction: column;
-    align-items: flex-start;
 }
