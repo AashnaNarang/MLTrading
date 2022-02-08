@@ -1,44 +1,40 @@
 const express = require('express');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
-const { portfolioValidation } = require('../../validations');
-const { portfolioController } = require('../../controllers');
-const userValidation = require('../../validations/user.validation');
-const userController = require('../../controllers/user.controller');
+const { securityValidation } = require('../../validations');
+const { securityController } = require('../../controllers');
 
 const router = express.Router();
 
 router
   .route('/')
-  .post(auth('managePortfolios'), validate(portfolioValidation.createPortfolio), portfolioController.createPortfolio)
-  .get(auth('getPortfolios'), validate(portfolioValidation.getPortfolios), portfolioController.getPortfolios);
+  // no auth for this for now because not sure how the Ml + trade algorithm will look
+  .post(auth(), validate(securityValidation.createSecurity), securityController.createSecurity)
+  // fix so only get your securities
+  .get(auth('securities'), validate(securityValidation.getSecurities), securityController.getSecurities);
 
 router
-  .route('/:portfolioId')
-  .get(auth('getPortfolios'), validate(portfolioValidation.getPortfolio), portfolioController.getPortfolio)
-  .patch(auth('managePortfolios'), validate(portfolioValidation.updatePortfolio), portfolioController.updatePortfolio)
-  .delete(auth('managePortfolios'), validate(portfolioValidation.deletePortfolio), portfolioController.deletePortfolio);
-
-router
-  .route('/user/:userId')
-  .get(auth('getPortfolios'), validate(portfolioValidation.getPortfolioUsingUserId), portfolioController.getPortfolioUsingUserId)
+  .route('/:securityId')
+  .get(auth('security'), validate(securityValidation.getSecurity), securityController.getSecurity)
+  .patch(auth('security'), validate(securityValidation.updateSecurity), securityController.updateSecurity)
+  .delete(auth('security'), validate(securityValidation.deleteSecurity), securityController.deleteSecurity);
 
 module.exports = router;
 
 /**
  * @swagger
  * tags:
- *   name: Portfolios
- *   description: Portfolio management and retrieval
+ *   name: Securities
+ *   description: Security management and retrieval
  */
 
 /**
  * @swagger
- * /portfolios:
+ * /securities:
  *   post:
- *     summary: Create a portfolio
+ *     summary: Create a security
  *     description:
- *     tags: [Portfolios]
+ *     tags: [Securities]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -48,53 +44,57 @@ module.exports = router;
  *           schema:
  *             type: object
  *             required:
- *               - user
- *               - portfolioType
- *               - initialFreeCash
- *               - transactionCost
+ *               - portfolio
+ *               - securityName
+ *               - securityCode
+ *               - avgPrice
+ *               - shares
  *             properties:
- *               user:
+ *               portfolio:
  *                 type: string
- *               portfolioType:
+ *               securityName:
  *                 type: string
- *               initialFreeCash:
- *                 type: number
- *               transactionCost:
+ *               securityCode:
+ *                 type: string
+ *               avgPrice:
+ *                  type: number
+ *               shares:
  *                  type: number
  *             example:
- *               user: 619308412ff24d3d28d7fe2b
- *               portfolioType: personal
- *               initialFreeCash: 150.00
- *               transactionCost: 1.50
+ *               portfolio: 619308412ff24d3d28d7fe2b
+ *               securityName: Shopify
+ *               securityCode: SHOP
+ *               avgPrice: 2568.50
+ *               shares: 2
  *     responses:
  *       "201":
  *         description: Created
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Portfolio'
+ *                $ref: '#/components/schemas/Security'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
  *         $ref: '#/components/responses/Forbidden'
  *       "404":
- *         description: User with this ID does not exist
+ *         description: Portfolio with this ID does not exist
  *       "400":
  *         description: Initial Free Cash Value must be valid, positive number
  *
  *   get:
- *     summary: Get all portfolios
- *     description: Only admins can retrieve all portfolios.
- *     tags: [Portfolios]
+ *     summary: Get all securities for your portfolio
+ *     description: 
+ *     tags: [Securities]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: query
- *         name: user
+ *         name: portfolio
  *         schema:
  *           type: string
- *         description: user's id
- *       - in: query
+ *         description: portfolio's id
+ *         required: true
  *       - in: query
  *         name: sortBy
  *         schema:
@@ -106,7 +106,7 @@ module.exports = router;
  *           type: integer
  *           minimum: 1
  *         default: 10
- *         description: Maximum number of portfolios
+ *         description: Maximum number of securities
  *       - in: query
  *         name: page
  *         schema:
@@ -125,7 +125,7 @@ module.exports = router;
  *                 results:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/Portfolio'
+ *                     $ref: '#/components/schemas/Security'
  *                 page:
  *                   type: integer
  *                   example: 1
@@ -146,11 +146,11 @@ module.exports = router;
 
 /**
  * @swagger
- * /portfolios/{id}:
+ * /securities/{id}:
  *   get:
- *     summary: Get a portfolio
- *     description: Logged in users can fetch only their own portfolio. Only admins can fetch other portfolios.
- *     tags: [Portfolios]
+ *     summary: Get a security
+ *     description: Logged in users can fetch only their own security.
+ *     tags: [Securities]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -159,14 +159,14 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: Portfolio id
+ *         description: Security id
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Portfolio'
+ *                $ref: '#/components/schemas/Security'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -175,9 +175,9 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   patch:
- *     summary: Update a portfolio
- *     description: Logged in users can only update their own information. Only admins can update other users.
- *     tags: [Portfolios]
+ *     summary: Update a security
+ *     description: Logged in users can only update their own information.
+ *     tags: [Securities]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -186,7 +186,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: portfolio id
+ *         description: security id
  *     requestBody:
  *       required: true
  *       content:
@@ -194,30 +194,29 @@ module.exports = router;
  *           schema:
  *             type: object
  *             properties:
- *               portfolioType:
+ *               portfolio:
  *                 type: string
- *               currPortfolioValue:
- *                 type: number
- *               initialFreeCash:
- *                 type: number
- *               freeCash:
- *                 type: number
- *               transactionCost:
+ *               securityName:
+ *                 type: string
+ *               securityCode:
+ *                 type: string
+ *               avgPrice:
+ *                  type: number
+ *               shares:
  *                  type: number
  *             example:
- *               user: 619308412ff24d3d28d7fe2b
- *               portfolioType: personal
- *               currPortfolioValue: 500.00
- *               initialFreeCash: 150.00
- *               freeCash: 150.00
- *               transactionCost: 1.50
+ *               portfolio: 619308412ff24d3d28d7fe2b
+ *               securityName: Shopify
+ *               securityCode: SHOP
+ *               avgPrice: 2568.50
+ *               shares: 2
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Portfolio'
+ *                $ref: '#/components/schemas/Security'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -226,9 +225,9 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   delete:
- *     summary: Delete a portfolio
- *     description: Logged in users can delete their own portfolios. Only admins can delete other users.
- *     tags: [Portfolios]
+ *     summary: Delete a security
+ *     description: Logged in users can delete their own portfolios. 
+ *     tags: [Securities]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -237,41 +236,10 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: Portfolio id
+ *         description: Security id
  *     responses:
  *       "200":
  *         description: No content
- *       "401":
- *         $ref: '#/components/responses/Unauthorized'
- *       "403":
- *         $ref: '#/components/responses/Forbidden'
- *       "404":
- *         $ref: '#/components/responses/NotFound'
- */
-
-/**
- * @swagger
- * /portfolios/user/{userId}:
- *   get:
- *     summary: Get a portfolio
- *     description: Fetch portfolio using a user id. 
- *     tags: [Portfolios]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: userId
- *         required: true
- *         schema:
- *           type: string
- *         description: Portfolio id using user id 
- *     responses:
- *       "200":
- *         description: OK
- *         content:
- *           application/json:
- *             schema:
- *                $ref: '#/components/schemas/Portfolio'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":

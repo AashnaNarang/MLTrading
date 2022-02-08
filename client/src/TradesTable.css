@@ -1,0 +1,17 @@
+.MuiDataGrid-root{
+    border: unset !important;
+}
+
+.MuiDataGrid-columnHeaderTitle{
+    font-family: Inter;
+    font-weight: bold !important;
+}
+
+.heading{
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 29px;
+    color: #263238;
+}

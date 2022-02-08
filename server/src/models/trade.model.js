@@ -25,6 +25,10 @@ const tradeSchema = mongoose.Schema(
       required: true,
       ref: "Security",
     },
+    securityCode: {
+      type: String, 
+      required: true
+    },
     sharesTraded: {
       type: Number, 
       required: true, 
