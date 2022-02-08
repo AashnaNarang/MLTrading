@@ -20,14 +20,7 @@ const getTrades = {
   }),
 };
 
-const getTrades2 = {
-  params: Joi.object().keys({
-    portfolioId: Joi.string().required().custom(objectId),
-  }),
-};
-
 module.exports = {
   addTrade,
   getTrades,
-  getTrades2
 };

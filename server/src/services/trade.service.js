@@ -1,7 +1,7 @@
 const { Trade } = require('../models');
 const { portfolioService } = require('../services');
 const securityService = require('./security.service');
-const { validatePortfolioId, validateSecurityId } = require("../utils/serviceUtils");
+const { validatePortfolioId, validateSecurityId, validateSecurityAndPortfolioMatch } = require("../utils/serviceUtils");
 
 /**
  * Create a trade
@@ -11,13 +11,14 @@ const { validatePortfolioId, validateSecurityId } = require("../utils/serviceUti
 const addTrade = async (tradeBody) => {
   await validatePortfolioId(tradeBody.portfolio, "Portfolio with this ID does not exist");
   await validateSecurityId(tradeBody.security, "Security with this ID does not exist");
+  await validateSecurityAndPortfolioMatch(tradeBody.security, tradeBody.portfolio, "This security does not belong to the given portfolio")
   let portfolio = await portfolioService.getPortfolioById(tradeBody.portfolio);
   let security = await securityService.getSecurityById(tradeBody.security);
   tradeBody.securityCode = security.securityCode;
   tradeBody.transactionCost = portfolio.transactionCost;
 
   if (tradeBody.action == "Sold") {
-    tradeBody.profit = tradeBody.price - security.avgPrice;
+    tradeBody.profit = (security.avgPrice - tradeBody.price) * tradeBody.sharesTraded;
   } else {
     tradeBody.profit = 0.00;
   }

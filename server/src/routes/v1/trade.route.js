@@ -9,7 +9,7 @@ const router = express.Router();
 router
   .route('/')
   .post(auth(), validate(tradeValidation.addTrade), tradeController.addTrade)
-  .get(auth(), validate(tradeValidation.getTrades), tradeController.getTrades);
+  .get(auth("trade"), validate(tradeValidation.getTrades), tradeController.getTrades);
 
 module.exports = router;
 

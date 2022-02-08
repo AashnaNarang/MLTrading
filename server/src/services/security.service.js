@@ -37,6 +37,9 @@ const querySecurities = async (filter, options) => {
  */
 const getSecurityInfoById = async (id) => {
   let security = await Security.findById(id);
+  if (!security) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Security not found');
+  }
   const quote = await yahooFinance.quote('AAPL');
   let currPrice = quote.regularMarketPrice;
   let currTotalValue = security.shares * currPrice;
