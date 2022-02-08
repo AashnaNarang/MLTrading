@@ -5,6 +5,7 @@ import '../Home.css';
 import TradesTable from "../containers/TradesTable";
 import SecurityBox from "./SecurityBox";
 import SecuritiesColumn from "../containers/SecuritiesColumn";
+import PortfolioGraph from './PortfolioGraph';
 
 const Home = props => {
 
@@ -33,6 +34,7 @@ const Home = props => {
         <div className='flex-row'>
           <div className='flex-col left-col'>
             <GreyBox title="Your Information" content={content} />
+            <PortfolioGraph title="Portfolio-Graph" portfolioId={portfolio.id} />
             <TradesTable portfolioId={portfolio.id}/>
           </div>
           <SecuritiesColumn portfolioId={portfolio.id}/>

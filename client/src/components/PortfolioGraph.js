@@ -57,7 +57,7 @@ export default class PortfolioGraph extends React.Component {
     const { labels, datasets } = this.state
 
     return (
-      <div>
+      <div className='portfolio-component'>
         <h5 className='box-title'>
           {"Portfolio Value"}
         </h5>
@@ -74,8 +74,7 @@ export default class PortfolioGraph extends React.Component {
                 position: 'right'
               }
             }}
-          width={window.innerWidth / 2.5}
-          height={window.innerHeight / 2.5}
+          height={window.innerHeight / 10}
         />
       </div>
     );

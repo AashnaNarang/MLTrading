@@ -52,6 +52,10 @@
     font-weight: 600;
 }
 
+.portfolio-component{ 
+    flex: 1;
+}
+
 .flex-row {
     display: flex;
     flex-direction: row;
@@ -72,7 +76,7 @@
 }
 
 .left-col {
-    flex: 7 1 auto;
+    flex: 1 1 auto;
     margin-right: 24px;
 }
 
