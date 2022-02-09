@@ -2,6 +2,7 @@ const httpStatus = require('http-status');
 const { Security } = require('../models');
 const { validatePortfolioId } = require("../utils/serviceUtils");
 const ApiError = require('../utils/ApiError');
+const yahooFinance = require('yahoo-finance2').default;
 
 /**
  * Add a security
@@ -30,6 +31,30 @@ const querySecurities = async (filter, options) => {
 };
 
 /**
+ * Get live security info by id
+ * @param {ObjectId} id
+ * @returns {Promise<Security>}
+ */
+const getSecurityInfoById = async (id) => {
+  let security = await Security.findById(id);
+  if (!security) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Security not found');
+  }
+  const quote = await yahooFinance.quote('AAPL');
+  let currPrice = quote.regularMarketPrice;
+  let currTotalValue = security.shares * currPrice;
+
+  let data = {
+    currentPrice: currPrice, 
+    currTotalValue: currTotalValue, 
+    totalReturn: security.totalValue - currTotalValue,
+    security: security
+  };
+
+  return data;
+};
+
+/**
  * Get security by id
  * @param {ObjectId} id
  * @returns {Promise<Security>}
@@ -38,15 +63,6 @@ const getSecurityById = async (id) => {
   let security = await Security.findById(id);
   return security;
 };
-
-// /**
-//  * Get portfolio by user id
-//  * @param {ObjectId} portfolioId
-//  * @returns {Promise<Security>}
-//  */
-// const getSecuritiesByPortfolioId = async (portfolioId) => {
-//   return Portfolio.find({ portfolio: portfolioId });
-// };
 
 /**
  * Update security by id
@@ -62,6 +78,10 @@ const updateSecurityById = async (securityId, updateBody) => {
   if (updateBody.portfolio) {
     await validatePortfolioId(updateBody.portfolio, "Portfolio with this ID does not exist");
   }
+  if (updateBody.avgPrice | updateBody.shares) {
+    updateBody.totalValue = updateBody.avgPrice * updateBody.shares;
+  }
+  updateBody.lastUpdated = new Date();
 
   Object.assign(security, updateBody);
   await security.save();
@@ -86,6 +106,7 @@ module.exports = {
   createSecurity,
   querySecurities,
   getSecurityById,
+  getSecurityInfoById,
   updateSecurityById,
   deleteSecurityById,
 };

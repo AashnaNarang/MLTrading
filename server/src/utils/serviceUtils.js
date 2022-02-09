@@ -45,7 +45,7 @@ const validateInitialFreeCash = async (initialFreeCash, errorMessage) => {
 
 /**
  * Validates id from security collection
- * @param {ObjectId} securityId - The portfolio id
+ * @param {ObjectId} securityId - The security id
  * @param {string} errorMessage - The relevant error message
  * @throws {ApiError} - if the ID does not exist in the mongoDB database
  * @returns void
@@ -57,10 +57,26 @@ const validateInitialFreeCash = async (initialFreeCash, errorMessage) => {
   }
 };
 
+/**
+ * Validates security's portfolio and given portfolio match
+ * @param {ObjectId} securityId - The security id
+ * @param {ObjectId} portfolioId - The portfolio id
+ * @param {string} errorMessage - The relevant error message
+ * @throws {ApiError} - if the given portoflio id doesnt match the portoflio id of the given security
+ * @returns void
+ */
+ const validateSecurityAndPortfolioMatch = async (securityId, portfolioId, errorMessage) => {
+  const security = await Security.findById(securityId);
+  if (security.portfolio != portfolioId) {
+    throw new ApiError(httpStatus.BAD_REQUEST, errorMessage);
+  }
+};
+
 module.exports = {
     validateUserId,
     validateInitialFreeCash,
     validatePortfolioId, 
-    validateSecurityId
+    validateSecurityId,
+    validateSecurityAndPortfolioMatch
   };
   

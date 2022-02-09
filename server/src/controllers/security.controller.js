@@ -17,7 +17,7 @@ const getSecurities = catchAsync(async (req, res) => {
 });
 
 const getSecurity = catchAsync(async (req, res) => {
-  const security = await securityService.getSecurityById(req.params.securityId);
+  const security = await securityService.getSecurityInfoById(req.params.securityId);
   if (!security) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Security not found');
   }

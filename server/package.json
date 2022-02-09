@@ -8,7 +8,7 @@
   "author": "Hagop Jamkojian <hagopj13@gmail.com>",
   "license": "MIT",
   "engines": {
-    "node": ">=12.0.0"
+    "node": ">=14.0.0"
   },
   "scripts": {
     "start": "pm2 start ecosystem.config.json --no-daemon",
@@ -72,7 +72,8 @@
     "swagger-ui-express": "^4.1.6",
     "validator": "^13.0.0",
     "winston": "^3.2.1",
-    "xss-clean": "^0.1.1"
+    "xss-clean": "^0.1.1",
+    "yahoo-finance2": "^2.1.2"
   },
   "devDependencies": {
     "coveralls": "^3.0.7",

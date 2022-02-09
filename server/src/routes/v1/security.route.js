@@ -10,7 +10,6 @@ router
   .route('/')
   // no auth for this for now because not sure how the Ml + trade algorithm will look
   .post(auth(), validate(securityValidation.createSecurity), securityController.createSecurity)
-  // fix so only get your securities
   .get(auth('securities'), validate(securityValidation.getSecurities), securityController.getSecurities);
 
 router

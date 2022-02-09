@@ -16,23 +16,30 @@ const verifyCallback = (req, resolve, reject, requiredRights) => async (err, use
     const hasRequiredRights = requiredRights.every((requiredRight) => userRights.includes(requiredRight));
     if (!hasRequiredRights) {
       let belongsToThem;
-      console.log(req.params);
-      const portfolioId = req.params.portfolioId || req.query.portfolio;
+      const portfolioId = req.params.portfolioId || req.query.portfolio || req.body.portfolio;
       if (portfolioId) {
-        if(mongoose.Types.ObjectId.isValid(portfolioId)) {
+        if (mongoose.Types.ObjectId.isValid(portfolioId)) {
           portfolio = await portfolioService.getPortfolioById(portfolioId);
           belongsToThem = portfolio ? (portfolio.user == user.id) : false;
         } else {
           return reject(new ApiError(httpStatus.BAD_REQUEST, 'Invalid mongo id'));
         }
-        
-      } else if(req.params.securityId) {
+      } else if (req.params.securityId) {
+        if (mongoose.Types.ObjectId.isValid(req.params.securityId)) {
           security = await securityService.getSecurityById(req.params.securityId);
-          portfolio = await portfolioService.getPortfolioById(security.portfolio);
-          belongsToThem = portfolio ? (portfolio.user == user.id) : false;
+          if (!security) {
+            return reject(new ApiError(httpStatus.NOT_FOUND, 'Security not found'));
+          } else {
+            portfolio = await portfolioService.getPortfolioById(security.portfolio);
+            belongsToThem = portfolio ? (portfolio.user == user.id) : false;
+          }
+        } else {
+          return reject(new ApiError(httpStatus.BAD_REQUEST, 'Invalid mongo id'));
+        }
       } else {
-        belongsToThem = (req.params.userId == user.id) || (req.body.user == user.id) ;
+        belongsToThem = (req.params.userId == user.id) || (req.body.user == user.id);
       }
+
       if (!belongsToThem) {
         return reject(new ApiError(httpStatus.FORBIDDEN, 'Forbidden'));
       }

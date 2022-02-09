@@ -18,7 +18,8 @@ const tradeSchema = mongoose.Schema(
     },
     price: {
       type: Number, 
-      required: true
+      required: true,
+      min: [0.0, "Needs to be a valid dollar value"],
     },
     security: {
       type: mongoose.Schema.Types.ObjectId,
