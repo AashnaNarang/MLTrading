@@ -14,7 +14,8 @@ describe('Trade model', () => {
         sharesTraded: 2, 
         transactionCost: 1.50,
         profit: 0, 
-        dateTraded: new Date()
+        dateTraded: new Date(),
+        securityCode: "SHOP"
       };
     });
 

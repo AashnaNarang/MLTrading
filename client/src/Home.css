@@ -1,12 +1,7 @@
-.container {
-    display: flex;
-}
-
 .hello-row {
     display: flex;
     flex-direction: row;
-    align-items: center;
-    gap: 18px;
+    justify-content: center;
 }
 
 .profit {
@@ -21,15 +16,15 @@
 .hello {
     font-family: Inter;
     font-size: 60px;
-    font-style: normal;
     font-weight: 600;
     line-height: 73px;
     letter-spacing: 0em;
+    margin-right: 12px;
 }
 
 .portfolioValue-subtitle {
     font-size: 16px;
-    font-family: "Inter";
+    font-family: Inter;
     color: #263238;
     font-weight: 400;
     opacity: 0.54;
@@ -37,14 +32,14 @@
 }
 .portfolioValue-amount {
     font-size: 60px;
-    font-family: "Inter";
+    font-family: Inter;
     color: #0D7404;
     font-weight: 600;
 }
 
 .freeCash-subtitle {
     font-size: 16px;
-    font-family: "Inter";
+    font-family: Inter;
     color: #263238;
     font-weight: 400;
     opacity: 0.54;
@@ -52,41 +47,50 @@
 }
 .freeCash-amount {
     font-size: 60px;
-    font-family: "Inter";
+    font-family: Inter;
     color: #0D7404;
     font-weight: 600;
+}
+
+.portfolio-component{ 
+    flex: 1;
 }
 
 .flex-row {
     display: flex;
     flex-direction: row;
-    align-items: center;
-    gap: 300px;
-    margin: 20px;
-    margin-left: 50px;
-    height: 180px;
+}
+
+.grey-box {
+    margin: 24px;
+    justify-content: space-around;
+}
+
+.main{
+    margin: 48px
 }
 
 .flex-col {
     display: flex;
     flex-direction: column;
-    /* flex-flow: column wrap; */
-    align-items: left;
-    gap: 0px;
-    /* height: 145px; */
-    overflow: hidden;
 }
 
-.flex-col-main {
-    display: flex;
-    flex-direction: column;
-    /* flex-flow: column wrap; */
-    align-items: center;
-    gap: 0px;
-    /* height: 145px; */
-    overflow: hidden;
+.left-col {
+    flex: 1 1 auto;
+    margin-right: 24px;
 }
 
-/* .wrapper {
-    overflow: hidden;
-} */
+.right-col {
+    flex: 1 1 auto;
+}
+
+.securities-title {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 29px;
+    /* identical to box height */
+
+    text-align: center;
+}

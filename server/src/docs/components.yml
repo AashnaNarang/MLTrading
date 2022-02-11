@@ -98,6 +98,70 @@ components:
         portfolioValue: 500.00
         dateAdded: 2021-07-26T03:05:35.007Z
 
+    Trade:
+      type: object
+      properties:
+        id:
+          type: string
+        portfolio:
+          type: string
+        price:
+          type: number
+        action:
+          type: string
+        security:
+          type: string
+        sharesTraded:
+          type: number
+        profit:
+          type: number
+        transactionCost:
+          type: number
+        dateTraded:
+          type: date
+        securityCode:
+          type: string
+      example:
+        id: 5ebac534954b54139806c112
+        portfolio: 619308412ff24d3d28d7fe2b
+        price: 500.00
+        action: Purchased
+        security: 619308412ff24d3d28d7fe2b
+        sharesTraded: 2
+        profit: 0
+        transactionCost: 1.50
+        dateTraded: 2021-07-26T03:05:35.007Z
+        securityCode: SHOP
+
+    Security:
+      type: object
+      properties:
+        id:
+          type: string
+        portfolio:
+          type: string
+        securityName:
+          type: string
+        securityCode:
+          type: string
+        avgPrice:
+          type: number
+        shares:
+          type: number
+        totalValue:
+          type: number
+        lastUpdated:
+          type: date
+      example:
+        id: 5ebac534954b54139806c112
+        portfolio: 619308412ff24d3d28d7fe2b
+        securityName: Shopify
+        securityCode: SHOP
+        avgPrice: 500.00
+        shares: 2
+        totalValue: 1000.00
+        lastUpdated: 2021-07-26T03:05:35.007Z
+
   responses:
     DuplicateEmail:
       description: Email already taken

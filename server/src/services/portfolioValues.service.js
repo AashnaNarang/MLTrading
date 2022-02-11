@@ -50,7 +50,6 @@ const addPortfolioValuesJob = async () => {
           currPortfolioValue: portfolioValue, 
           profit: (portfolioValue - portfolio.initialFreeCash)
         });
-        console.log(portfolio);
     })
   });
 }

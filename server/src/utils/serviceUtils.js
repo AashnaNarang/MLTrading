@@ -1,5 +1,5 @@
 const ApiError = require("./ApiError");
-const { User, Portfolio } = require("../models");
+const { User, Portfolio, Security } = require("../models");
 const httpStatus = require("http-status");
 
 /**
@@ -31,7 +31,7 @@ const validateInitialFreeCash = async (initialFreeCash, errorMessage) => {
 
 /**
  * Validates id from portfolio collection
- * @param {ObjectId} userId - The portfolio id
+ * @param {ObjectId} portfolioId - The portfolio id
  * @param {string} errorMessage - The relevant error message
  * @throws {ApiError} - if the ID does not exist in the mongoDB database
  * @returns void
@@ -43,9 +43,40 @@ const validateInitialFreeCash = async (initialFreeCash, errorMessage) => {
   }
 };
 
+/**
+ * Validates id from security collection
+ * @param {ObjectId} securityId - The security id
+ * @param {string} errorMessage - The relevant error message
+ * @throws {ApiError} - if the ID does not exist in the mongoDB database
+ * @returns void
+ */
+ const validateSecurityId = async (securityId, errorMessage) => {
+  const security = await Security.findById(securityId);
+  if (!security) {
+    throw new ApiError(httpStatus.NOT_FOUND, errorMessage);
+  }
+};
+
+/**
+ * Validates security's portfolio and given portfolio match
+ * @param {ObjectId} securityId - The security id
+ * @param {ObjectId} portfolioId - The portfolio id
+ * @param {string} errorMessage - The relevant error message
+ * @throws {ApiError} - if the given portoflio id doesnt match the portoflio id of the given security
+ * @returns void
+ */
+ const validateSecurityAndPortfolioMatch = async (securityId, portfolioId, errorMessage) => {
+  const security = await Security.findById(securityId);
+  if (security.portfolio != portfolioId) {
+    throw new ApiError(httpStatus.BAD_REQUEST, errorMessage);
+  }
+};
+
 module.exports = {
     validateUserId,
     validateInitialFreeCash,
-    validatePortfolioId
+    validatePortfolioId, 
+    validateSecurityId,
+    validateSecurityAndPortfolioMatch
   };
   
