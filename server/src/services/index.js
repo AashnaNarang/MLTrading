@@ -5,3 +5,4 @@ module.exports.userService = require('./user.service');
 module.exports.portfolioService = require('./portfolio.service');
 module.exports.portfolioValuesService = require('./portfolioValues.service');
 module.exports.addPortfolioValuesService = require('./addPortfolioValues.service');
+module.exports.machineLearningService = require('./machineLearning.service');

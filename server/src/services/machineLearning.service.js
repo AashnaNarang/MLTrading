@@ -1,10 +1,12 @@
-const symbols = require("../config/stocks");
-// const { symbol } = require('joi');
+const { symbols } = require('../config/stocks');
 require('dotenv').config();
-   // import * as tf from "@tensorflow/tfjs";
-const tf = require('@tensorflow/tfjs');
+const sleep = (waitTimeInMs) => new Promise(resolve => setTimeout(resolve, waitTimeInMs));
 const request = require('request');
+// Load the binding
+const tf = require('@tensorflow/tfjs-node');
 
+
+// https://blog.tensorflow.org/2020/01/run-tensorflow-savedmodel-in-nodejs-directly-without-conversion.html
 
 
 function getRSI(symbol){
@@ -35,6 +37,7 @@ function getRSI(symbol){
 function getEMA(symbol){
     return new Promise(function (resolve, reject){
     let url = 'https://www.alphavantage.co/query?function=EMA&symbol='+symbol+'&interval=weekly&time_period=10&series_type=close&apikey='+process.env.API_KEY;
+
     request.get({
         url: url,
         json: true,
@@ -104,34 +107,45 @@ function preprocessEMAandSMA(emaData, smaData){
     }
     return [emaData, smaData];
 }
-  
 
-async function main(){
-    const ML_model = await tfft.loadGraphModel(MODEL_URL);
+async function run(){
+    //path must be your absolute file path  
+    const path = 'file:///Users/aelna/Documents/MachineLearning/MLTrading/server/src/services/model/model.json'
+    const model1 = await tf.loadLayersModel(path);
+        
+    const buy = [];
+    const sell = [];
 
-    for(symbol of symbols){
-        let rsiData = await getRSI("MAA");
-        let emaData = await getEMA("MAA");
-        let smaData = await getSMA("MAA");
-        console.log(rsiData);
-        console.log(emaData);
-        console.log(smaData);
+    for(element of symbols){
+        await sleep(1000); // sleep for 1 seconds
+        console.log(element);
+        let rsiData = await getRSI(element);
+        let emaData = await getEMA(element);
+        let smaData = await getSMA(element);
+        let data = preprocessEMAandSMA(emaData,smaData);
 
         rsiData = preprocessRSI(rsiData);
-        let data = preprocessEMAandSMA(emaData,smaData);
         emaData = data[0];
         smaData = data[1];
-        console.log(ML_model.summary());
-        const predictior = ML_model.execute(rsiData, emaData, smaData);
-    
-        console.log("The prediction is: " + predictior);
+        const arr = [emaData, smaData, rsiData];    
 
+        const outputArray = model1.predict(tf.tensor([arr]));
+        const prediction = Math.round(outputArray.dataSync());
 
+        if(prediction == 1){
+            buy.push(element);
+        }else{
+            sell.push(element);
+        }
+        console.log("The prediction is: " + Math.round(outputArray.dataSync()));
     }
+    console.log("Sell these:" + sell.toString());
+    console.log("Buy these: " + buy.toString());
         //feed to model normalized data  
-
 }
 
+run();
+
 module.exports = {
-    main,
+    run,
   };

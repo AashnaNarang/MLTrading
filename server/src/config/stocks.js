@@ -3,7 +3,7 @@ const symbols =  ["MMM", "AOS", "ABT", "ABBV", "ABMD", "ACN", "ATVI", "ADM", "AD
 "AMCR", "AEE", "AAL", "AEP", "AXP", "AIG", "AMT", "AWK", "AMP", "ABC", "AME", "AMGN", "APH", "ADI",
 "ANSS", "ANTM", "AON", "APA", "AAPL", "AMAT", "APTV", "ANET", "AJG", "AIZ", "T", "ATO", "ADSK",
 "ADP", "AZO", "AVB", "AVY", "BKR", "BLL", "BAC", "BBWI", "BAX", "BDX", "BRK.B", "BBY", "BIO",
-"TECH", "BIIB", "BLK", "BK", "BA", "BKNG", "BWA", "BXP", "BSX", "BMY", "AVGO", "BR", "BRO", "BF.B",
+"TECH", "BIIB", "BLK", "BK", "BA", "BKNG", "BWA", "BXP", "BSX", "BMY", "AVGO", "BR", "BRO",
 "CHRW", "CDNS", "CZR", "CPB", "COF", "CAH", "KMX", "CCL", "CARR", "CTLT", "CAT", "CBOE", "CBRE",
 "CDW", "CE", "CNC", "CNP", "CDAY", "CERN", "CF", "CRL", "SCHW", "CHTR", "CVX", "CMG", "CB", "CHD",
 "CI", "CINF", "CTAS", "CSCO", "C", "CFG", "CTXS", "CLX", "CME", "CMS", "KO", "CTSH", "CL", "CMCSA",
@@ -18,11 +18,11 @@ const symbols =  ["MMM", "AOS", "ABT", "ABBV", "ABMD", "ACN", "ATVI", "ADM", "AD
 "HRL", "HST", "HWM", "HPQ", "HUM", "HBAN", "HII", "IBM", "IEX", "IDXX", "INFO", "ITW", "ILMN",
 "INCY", "IR", "INTC", "ICE", "IFF", "IP", "IPG", "INTU", "ISRG", "IVZ", "IPGP", "IQV", "IRM",
 "JBHT", "JKHY", "J", "SJM", "JNJ", "JCI", "JPM", "JNPR", "KSU", "K", "KEY", "KEYS", "KMB", "KIM",
-"KMI", "KLAC", "KHC", "KR", "LHX", "LH", "LRCX", "LW", "LVS", "LEG", "LDOS", "LEN", "LNC", "LIN",
+"KMI", "KLAC", "KHC", "KR", "LHX", "LH", "LW", "LVS", "LEG", "LDOS", "LEN", "LNC", "LIN",
 "LYV", "LKQ", "LMT", "L", "LOW", "LUMN", "LYB", "MTB", "MRO", "MPC", "MKTX", "MAR", "MMC", "MLM",
 "MAS", "MA", "MTCH", "MKC", "MCD", "MCK", "MDT", "MRK", "MET", "MTD", "MGM", "MCHP", "MU", "MSFT",
 "MAA", "MRNA", "MHK", "TAP", "MDLZ", "MPWR", "MNST", "MCO", "MS", "MSI", "MSCI", "NDAQ", "NTAP",
-"NFLX", "NWL", "NEM", "NWSA", "NWS", "NEE", "NLSN", "NKE", "NI", "NSC", "NTRS", "NOC", "NLOK",
+"NFLX", "NWL", "NEM", "NWSA", "NWS", "NEE", "NLSN", "NKE", "NSC", "NTRS", "NOC", "NLOK",
 "NCLH", "NRG", "NUE", "NVDA", "NVR", "NXPI", "ORLY", "OXY", "ODFL", "OMC", "OKE", "ORCL", "OGN",
 "OTIS", "PCAR", "PKG", "PH", "PAYX", "PAYC", "PYPL", "PENN", "PNR", "PBCT", "PEP", "PKI", "PFE",
 "PM", "PSX", "PNW", "PXD", "PNC", "POOL", "PPG", "PPL", "PFG", "PG", "PGR", "PLD", "PRU", "PTC",
@@ -34,8 +34,14 @@ const symbols =  ["MMM", "AOS", "ABT", "ABBV", "ABMD", "ACN", "ATVI", "ADM", "AD
 "TRMB", "TFC", "TWTR", "TYL", "TSN", "USB", "UDR", "ULTA", "UAA", "UA", "UNP", "UAL", "UPS", "URI",
 "UNH", "UHS", "VLO", "VTR", "VRSN", "VRSK", "VZ", "VRTX", "VFC", "VIAC", "VTRS", "V", "VNO", "VMC",
 "WRB", "GWW", "WAB", "WBA", "WMT", "WM", "WAT", "WEC", "WFC", "WELL", "WST", "WDC", "WU", "WRK",
-"WY", "WHR", "WMB", "WLTW", "WYNN", "XEL", "XLNX", "XYL", "YUM", "ZBRA", "ZBH", "ZION", "ZTS"];
+"WY", "WHR", "WMB", "WYNN", "XEL", "XLNX", "XYL", "YUM", "ZBRA", "ZBH", "ZION", "ZTS"];
+
+//"BF.B", "LRCX" 
+// "NI", "WLTW"
+//are returning null
+
 
 module.exports = {
-    symbols
-}
+    symbols,
+  };
+  
