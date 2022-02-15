@@ -3,6 +3,8 @@ const { PortfolioValues, Portfolio } = require('../models');
 const { validatePortfolioId } = require("../utils/serviceUtils");
 const { portfolioService } = require('../services');
 const ApiError = require('../utils/ApiError');
+const { Security } = require('../models');
+const yahooFinance = require('yahoo-finance2').default;
 
 /**
  * Create a portfolio value
@@ -37,11 +39,18 @@ const addPortfolioValuesJob = async () => {
         throw new Error("Failed to get portfolios in addPortfolioValuesJob");
     }
     portfolios.map(async (portfolio) => {
-        var portfolioValue;
-        portfolioValue = portfolio.freeCash;
-        // go through securities model filter by portfolio.id
-        // calc value of securities and add 
-        // note: can remove all asyncs and awaits and itll work still
+        let portfolioValue = portfolio.freeCash;
+        let valueOfSecurities = 0;
+        let securities = await Security.find({portfolio: portfolio._id});
+
+        for (let i = 0; i < securities.length; i++) {
+          let security = securities[i];
+          const quote = await yahooFinance.quote(security.securityCode);
+          let currPrice = quote.regularMarketPrice;
+          valueOfSecurities += security.shares * currPrice;
+        }
+        portfolioValue += valueOfSecurities;
+
         await addPortfolioValue({
             portfolioId: portfolio.id, 
             portfolioValue: portfolioValue
