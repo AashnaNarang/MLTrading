@@ -23,7 +23,10 @@ function getRSI(symbol){
         } else if (res.statusCode !== 200) {
         console.log('Status:', res.statusCode);
         } else {
-        rsiData = data['Technical Analysis: RSI'];
+            if(isEmpty(data)){
+                return resolve(0);
+            }
+        let rsiData = data['Technical Analysis: RSI'];
         let date = Object.keys(rsiData)[0];
         rsiData = rsiData[date]["RSI"];
         resolve(rsiData);
@@ -49,6 +52,9 @@ function getEMA(symbol){
         } else if (res.statusCode !== 200) {
         console.log('Status:', res.statusCode);
         } else {
+            if(isEmpty(data)){
+                return resolve(0);
+            }
         let emaData = data['Technical Analysis: EMA'];
         let date = Object.keys(emaData)[0];
         emaData = emaData[date]["EMA"];
@@ -73,6 +79,9 @@ function getSMA(symbol){
         } else if (res.statusCode !== 200) {
         console.log('Status:', res.statusCode);
         } else {
+            if(isEmpty(data)){
+                return resolve(0);
+            }
         let smaData = data['Technical Analysis: SMA'];
         let date = Object.keys(smaData)[0];
         smaData = smaData[date]["SMA"];
@@ -83,6 +92,12 @@ function getSMA(symbol){
     
 }
 
+//check if the request is empty or not
+function isEmpty(empty) {
+    return Object.keys(empty).length === 0 && empty.constructor === Object;
+}
+
+// preprocess the RSI based on our documentation
 function preprocessRSI(rsiData){
     if(rsiData > 70){
         rsiData = 1;
@@ -96,6 +111,7 @@ function preprocessRSI(rsiData){
     return rsiData;
 }
 
+//preprocessing the ema and sma based on our documentation
 function preprocessEMAandSMA(emaData, smaData){
     if(smaData >= emaData){
         smaData = 1;
@@ -118,30 +134,32 @@ async function run(){
 
     for(element of symbols){
         await sleep(1000); // sleep for 1 seconds
-        console.log(element);
+        //get technical indicator per stock
         let rsiData = await getRSI(element);
         let emaData = await getEMA(element);
         let smaData = await getSMA(element);
-        let data = preprocessEMAandSMA(emaData,smaData);
 
+        //preprocess the data
+        let data = preprocessEMAandSMA(emaData,smaData);
         rsiData = preprocessRSI(rsiData);
         emaData = data[0];
         smaData = data[1];
+        //create an array format to pass through the model
         const arr = [emaData, smaData, rsiData];    
 
+        //predict - results would be between 0 and 1, so round to nearest
         const outputArray = model1.predict(tf.tensor([arr]));
         const prediction = Math.round(outputArray.dataSync());
 
+        //One is buy, 0 is sell
         if(prediction == 1){
             buy.push(element);
         }else{
             sell.push(element);
         }
-        console.log("The prediction is: " + Math.round(outputArray.dataSync()));
     }
     console.log("Sell these:" + sell.toString());
     console.log("Buy these: " + buy.toString());
-        //feed to model normalized data  
 }
 
 run();
