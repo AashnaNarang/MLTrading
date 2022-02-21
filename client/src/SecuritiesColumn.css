@@ -8,7 +8,6 @@
 .sc-column {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     flex: 1 1 auto;
     margin-bottom: 24px;
 }
