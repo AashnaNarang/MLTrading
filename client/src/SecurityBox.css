@@ -48,3 +48,9 @@
     display: flex;
     align-items: flex-end;
 }
+
+.modal{
+    top: 30%;
+    width: 35%;
+    height: 30%;
+}
