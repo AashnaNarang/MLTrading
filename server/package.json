@@ -48,8 +48,6 @@
     "prettier"
   ],
   "dependencies": {
-    "@tensorflow/tfjs": "^3.13.0",
-    "@tensorflow/tfjs-node": "^3.13.0",
     "bcryptjs": "^2.4.3",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
