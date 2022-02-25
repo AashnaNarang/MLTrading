@@ -150,6 +150,7 @@ async function run(){
         //predict - results would be between 0 and 1, so round to nearest
         const outputArray = model1.predict(tf.tensor([arr]));
         const prediction = Math.round(outputArray.dataSync());
+        console.log(prediction)
 
         //One is buy, 0 is sell
         if(prediction == 1){
