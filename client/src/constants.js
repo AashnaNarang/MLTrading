@@ -12,6 +12,7 @@ export const PORTFOLIO_USER_URI = '/v1/portfolios/user';
 export const PORTFOLIO_VALUES_URI = '/v1/values';
 export const SECURITY_URI = '/v1/securities'
 export const TRADES_URI = '/v1/trades'
+export const USERS_URI = '/v1/users'
 
 // Auth
 export const LOGIN_FAILED = 'LOGIN_FAILED';
