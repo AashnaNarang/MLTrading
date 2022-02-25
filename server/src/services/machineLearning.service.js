@@ -162,7 +162,7 @@ async function run(){
     console.log("Buy these: " + buy.toString());
 }
 
-run();
+// run();
 
 module.exports = {
     run,

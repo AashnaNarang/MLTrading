@@ -27,7 +27,7 @@ const addTrade = async (tradeBody) => {
 };
 
 /**
- * Query for securities
+ * Query for trades
  * @param {Object} filter - Mongo filter
  * @param {Object} options - Query options
  * @param {string} [options.sortBy] - Sort option in the format: sortField:(desc|asc)

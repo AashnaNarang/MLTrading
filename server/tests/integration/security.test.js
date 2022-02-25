@@ -101,8 +101,8 @@ describe('Securities routes', () => {
         totalResults: 2,
       });
       expect(res.body.results).toHaveLength(2);
-      expect(res.body.results[0].portfolio).toEqual(portfolioOne._id.toHexString());
-      expect(res.body.results[1].portfolio).toEqual(portfolioOne._id.toHexString());
+      expect(res.body.results[0].security.portfolio).toEqual(portfolioOne._id.toHexString());
+      expect(res.body.results[1].security.portfolio).toEqual(portfolioOne._id.toHexString());
     });
 
     test('should return 401 if access token is missing', async () => {
@@ -149,8 +149,8 @@ describe('Securities routes', () => {
         totalResults: 2,
       });
       expect(res.body.results).toHaveLength(2);
-      expect(res.body.results[0].id).toBe(securityOne._id.toHexString());
-      expect(res.body.results[1].id).toBe(securityTwo._id.toHexString());
+      expect(res.body.results[0].security.id).toBe(securityOne._id.toHexString());
+      expect(res.body.results[1].security.id).toBe(securityTwo._id.toHexString());
     });
 
     test('should correctly sort the returned array if ascending sort param is specified', async () => {
@@ -174,8 +174,8 @@ describe('Securities routes', () => {
         totalResults: 2,
       });
       expect(res.body.results).toHaveLength(2);
-      expect(res.body.results[0].id).toBe(securityTwo._id.toHexString());
-      expect(res.body.results[1].id).toBe(securityOne._id.toHexString());
+      expect(res.body.results[0].security.id).toBe(securityTwo._id.toHexString());
+      expect(res.body.results[1].security.id).toBe(securityOne._id.toHexString());
     });
 
     test('should limit returned array if limit param is specified', async () => {
@@ -199,7 +199,7 @@ describe('Securities routes', () => {
         totalResults: 2,
       });
       expect(res.body.results).toHaveLength(1);
-      expect(res.body.results[0].id).toBe(securityOne._id.toHexString());
+      expect(res.body.results[0].security.id).toBe(securityOne._id.toHexString());
     });
 
     test('should return the correct page if page and limit params are specified', async () => {
@@ -223,7 +223,7 @@ describe('Securities routes', () => {
         totalResults: 2,
       });
       expect(res.body.results).toHaveLength(1);
-      expect(res.body.results[0].id).toBe(securityTwo._id.toHexString());
+      expect(res.body.results[0].security.id).toBe(securityTwo._id.toHexString());
     });
   });
 
