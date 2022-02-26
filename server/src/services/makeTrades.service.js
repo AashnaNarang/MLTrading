@@ -3,6 +3,10 @@ const { symbols } = require('../config/stocks');
 const { Portfolio, Security, PortfolioValues } = require('../models');
 const { tradeService, machineLearningService, portfolioValuesService, securityService } = require('../services');
 const yahooFinance = require('yahoo-finance2').default;
+const sleep = (waitTimeInMs) => new Promise(resolve => setTimeout(resolve, waitTimeInMs));
+const request = require('request');
+
+const stock_map = new Map();
 
 // job automatically runs every day at 9:30 am (00 seconds, 30 minutes, 09 hours)
 const task = cron.schedule('00 30 09 * * *', () => {
@@ -12,9 +16,9 @@ const task = cron.schedule('00 30 09 * * *', () => {
     let stockPrices = []
     //create a map for the stocks and price
     //the price will return a json body request, need to parse and find the askPrice
-    const map = new Map();
     for(element of symbols){
-        map.set(element, callTiingo(element));
+        map.set(element, await getQuote(element));
+        await sleep(1000); // sleep for 1 seconds
     }
     // call tiingo to get all current stock prices and maybe combine buy and sell objects with prices
     Portfolio.find({} , (err, portfolios) => {
@@ -41,23 +45,35 @@ const task = cron.schedule('00 30 09 * * *', () => {
     console.log("Ran " + Date());
 })
 
-function callTiingo(element){
-    var request = require('request');
-    var requestOptions = {
-    'url': 'https://api.tiingo.com/iex/?tickers='+element+'&token=0b59a495e8d99ddc351b4e713924d0c192f6f216',
-    'headers': {
-        'Content-Type': 'application/json'
+function getQuote(symbol){
+    return new Promise(function (resolve, reject){
+    let url = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol='+symbol+'&apikey='+process.env.API_KEY;
+    request.get({
+        url: url,
+        json: true,
+        headers: {'User-Agent': 'request'}
+    }, (err, res, data) => {
+        if (err) {
+        console.log('Error:', err);
+        reject(err);
+        } else if (res.statusCode !== 200) {
+        console.log('Status:', res.statusCode);
+        } else {
+            if(isEmpty(data)){
+                return resolve(0);
+            }
+        let globalQuote = data['Global Quote'];
+        let stockQuote = globalQuote['05. price'];
+        if(stockQuote === undefined){
+            //this is for some quotes that would be pulled by yahoo stock
+            stockQuote = -1;
         }
-};
-
-request(requestOptions,
-    function(error, response, body) {
-        console.log(body);
-    }
-);        
+        resolve(stockQuote);
+        }
+    });
+    })
     
 }
-
 const sellSecurities = (sell, portfolio, securities) => {
     for (let i = 0; i < securities.length; i++) {
         let security = securities[i];
@@ -70,7 +86,10 @@ const sellSecurities = (sell, portfolio, securities) => {
 const getSecuritiesWithBuyAndCanAfford = (buy, portfolio, stockPrices) => {
     let canAfford = [];
     for (let b in buy) {
-        let price = stockPrices[b];
+        let price = stock_map[b];
+        if(price = -1){
+            price = yahooFinance.quote(b)
+        }
         //we could just randomly select from here and minus free cash while we are at it?
         if (price < portfolio.freeCash) {
             canAfford.push(b);
