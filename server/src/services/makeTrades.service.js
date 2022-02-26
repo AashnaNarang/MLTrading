@@ -83,11 +83,11 @@ const sellSecurities = (sell, portfolio, securities) => {
     }
 }
 
-const getSecuritiesWithBuyAndCanAfford = (buy, portfolio, stockPrices) => {
+const getSecuritiesWithBuyAndCanAfford = (buy, portfolio) => {
     let canAfford = [];
     for (let b in buy) {
         let price = stock_map[b];
-        if(price = -1){
+        if(price === -1){
             price = yahooFinance.quote(b)
         }
         //we could just randomly select from here and minus free cash while we are at it?
@@ -147,7 +147,6 @@ const buySecurities = async (canAfford, portfolioId, securities) => {
             avgPrice: quote,
             shares: 1
         });
-y
     }
     //add trade 
     await tradeService.addTrade({
