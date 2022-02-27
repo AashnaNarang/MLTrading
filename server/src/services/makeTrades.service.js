@@ -8,42 +8,11 @@ const request = require('request');
 
 const stock_map = new Map();
 
-// job automatically runs every day at 9:30 am (00 seconds, 30 minutes, 09 hours)
-const task = cron.schedule('00 30 09 * * *', () => {
-    let predictions =  machineLearningService.run();
-    let buy = predictions.buy;
-    let sell = predictions.sell;
-    let stockPrices = []
-    //create a map for the stocks and price
-    //the price will return a json body request, need to parse and find the askPrice
-    for(element of symbols){
-        map.set(element, await getQuote(element));
-        await sleep(1000); // sleep for 1 seconds
-    }
-    // call tiingo to get all current stock prices and maybe combine buy and sell objects with prices
-    Portfolio.find({} , (err, portfolios) => {
-        if (err) {
-            console.log(err);
-            throw new Error("Failed to get portfolios in makeTradesJob");
-        }
-        portfolios.map(async (portfolio) => {
-            let securities = await Security.find({portfolioId: portfolio.id});
-            //for add trades its body says portfolio
-            sellSecurities(sell, portfolio, securities);
-            let done = false;
-            while (!done){
-                let canAfford = getSecuritiesWithBuyAndCanAfford(buy, portfolio, stockPrices);
-                if (canAfford.length != 0) {
-                    await buySecurities(canAfford, portfolio.id, securities);
-                } else {
-                    done = true;
-                }
-            }
-        });
-    });
+//check if the request is empty or not
+function isEmpty(empty) {
+    return Object.keys(empty).length === 0 && empty.constructor === Object;
+}
 
-    console.log("Ran " + Date());
-})
 
 function getQuote(symbol){
     return new Promise(function (resolve, reject){
@@ -74,6 +43,48 @@ function getQuote(symbol){
     })
     
 }
+// job automatically runs every day at 9:30 am (00 seconds, 30 minutes, 09 hours)
+const task = cron.schedule('00 36 21 * * *', async () => {
+    console.log("start");
+    let prediction =  await machineLearningService.run();
+    let buy = prediction.buy;
+    let sell = prediction.sell;
+    console.log(buy);
+    console.log(sell);
+    let stockPrices = []
+    //create a map for the stocks and price
+    //the price will return a json body request, need to parse and find the askPrice
+    for(element of symbols){
+        stock_map.set(element, await getQuote(element));
+        await sleep(1000); // sleep for 1 seconds
+    }
+    console.log(stock_map.values())
+    // call tiingo to get all current stock prices and maybe combine buy and sell objects with prices
+    Portfolio.find({} , (err, portfolios) => {
+        if (err) {
+            console.log(err);
+            throw new Error("Failed to get portfolios in makeTradesJob");
+        }
+        portfolios.map(async (portfolio) => {
+            let securities = await Security.find({portfolioId: portfolio.id});
+            //for add trades its body says portfolio
+            sellSecurities(sell, portfolio, securities);
+            let done = false;
+            while (!done){
+                let canAfford = getSecuritiesWithBuyAndCanAfford(buy, portfolio, stockPrices);
+                if (canAfford.length != 0) {
+                    await buySecurities(canAfford, portfolio, securities);
+                } else {
+                    done = true;
+                }
+            }
+        });
+    });
+
+    console.log("Ran " + Date());
+})
+
+
 const sellSecurities = (sell, portfolio, securities) => {
     for (let i = 0; i < securities.length; i++) {
         let security = securities[i];
@@ -83,12 +94,12 @@ const sellSecurities = (sell, portfolio, securities) => {
     }
 }
 
-const getSecuritiesWithBuyAndCanAfford = (buy, portfolio) => {
+const getSecuritiesWithBuyAndCanAfford = async (buy, portfolio) => {
     let canAfford = [];
     for (let b in buy) {
         let price = stock_map[b];
         if(price === -1){
-            price = yahooFinance.quote(b)
+            price = await yahooFinance.quote(b)
         }
         //we could just randomly select from here and minus free cash while we are at it?
         if (price < portfolio.freeCash) {
@@ -98,7 +109,7 @@ const getSecuritiesWithBuyAndCanAfford = (buy, portfolio) => {
     return canAfford;
 }
 
-const sellSecurity = (portfolio, security) => {
+const sellSecurity = async (portfolio, security) => {
     const quote = await yahooFinance.quote(security);
     let currPrice = quote.regularMarketPrice;
     await tradeService.addTrade({
@@ -126,12 +137,17 @@ const sellSecurity = (portfolio, security) => {
     // update security using security service
 }
 
-const buySecurities = async (canAfford, portfolioId, securities) => {
+const buySecurities = async (canAfford, portfolio, securities) => {
     let rndInt = randomIntFromInterval(0, canAfford.length - 1);
     let code = canAfford[rndInt];
-    const quote = await yahooFinance.quote(code);
-    let currPrice = quote.regularMarketPrice;
-    let security = await Security.findOne({portfolio: portfolioId, securityCode: code});
+    let currPrice = await getQuote(code);
+    // there is an issue with yahoofinance
+    if(currPrice === -1){
+        currPrice = 1;
+    //     const quote = await yahooFinance.quote(code);
+    //     currPrice = quote.regularMarketPrice;
+    }
+    let security = await Security.findOne({portfolio: portfolio.Id, securityCode: code});
     if (security) {
         await securityService.updateSecurityById(code, {
             portfolio: portfolio,
@@ -144,7 +160,7 @@ const buySecurities = async (canAfford, portfolioId, securities) => {
             portfolio: portfolio,
             securityName: code,
             securityCode: code,
-            avgPrice: quote,
+            avgPrice: currPrice,
             shares: 1
         });
     }

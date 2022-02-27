@@ -146,6 +146,7 @@ function getQuote(symbol){
         let globalQuote = data['Global Quote'];
         let stockQuote = globalQuote['05. price'];
         if(stockQuote === undefined){
+            //this is for some quotes that would be pulled by yahoo stock
             stockQuote = -1;
         }
         resolve(stockQuote);
@@ -182,8 +183,6 @@ async function run(){
     for(element of symbols){
         await sleep(1000); // sleep for 1 seconds
         //get technical indicator per stock
-        let quote = await getQuote(element);
-        console.log(quote);
         let rsiData = await getRSI(element);
         let emaData = await getEMA(element);
         let smaData = await getSMA(element);
@@ -209,9 +208,11 @@ async function run(){
     }
     console.log("Sell these:" + sell.toString());
     console.log("Buy these: " + buy.toString());
+    let prediction = new Map();
+    prediction.set("buy", buy);
+    prediction.set("sell", sell);
+    return  {buy , sell};
 }
-
-run();
 
 module.exports = {
     run,
