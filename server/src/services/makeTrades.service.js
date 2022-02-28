@@ -6,6 +6,7 @@ const yahooFinance = require('yahoo-finance2').default;
 const sleep = (waitTimeInMs) => new Promise(resolve => setTimeout(resolve, waitTimeInMs));
 const request = require('request');
 
+//This contains the symbol and its current price
 const stock_map = new Map();
 
 //check if the request is empty or not
@@ -50,7 +51,7 @@ function getQuote(symbol){
     
 }
 // job automatically runs every day at 9:30 am (00 seconds, 30 minutes, 09 hours)
-const task = cron.schedule('00 12 02 * * *', async () => {
+const task = cron.schedule('00 40 16 * * *', async () => {
     console.log("start");
     let prediction =  await machineLearningService.run();
     const buy = prediction.buy;
@@ -75,11 +76,11 @@ const task = cron.schedule('00 12 02 * * *', async () => {
         portfolios.map(async (portfolio) => {
             console.log("port id " + portfolio.id);
             console.log("port id " + portfolio);
-            let securities = await Security.find({portfolioId: portfolio.id});
+            let securities = await Security.find({portfolio: portfolio.id}); //This returns nothing
             console.log("list of sec " + securities);
             sellSecurities(sell, portfolio, securities);
             let done = false;
-            let count = 0
+            let count = 0 // for testing purposes 
             while (!done && count !== 10){
                 let canAfford = await getSecuritiesWithBuyAndCanAfford(buy, portfolio);
                 console.log(canAfford.toString());
@@ -112,6 +113,10 @@ const sellSecurities = async (sell, portfolio, securities) => {
 const getSecuritiesWithBuyAndCanAfford = async (buy, portfolio) => {
     let canAfford = [];
     for (let b of buy) {
+        // const quote = await yahooFinance.quote(b);
+        // console.log(quote);
+        // let currPrice = quote.regularMarketPrice;
+        // console.log(currPrice);
         let price = stock_map.get(b);
         if(price === -1){
             // price = await yahooFinance.quote(b);
@@ -166,6 +171,7 @@ const buySecurities = async (canAfford, portfolio, securities) => {
     // there is an issue with yahoofinance
     if(currPrice === -1){
         currPrice = 1;
+        //having errors with this, but i can also get name so will put it later
         // const quote = await yahooFinance.quote(code);
         // currPrice = quote.regularMarketPrice;
     }
