@@ -124,55 +124,7 @@ function preprocessEMAandSMA(emaData, smaData){
     return [emaData, smaData];
 }
 
-const map = new Map();
-
-function getQuote(symbol){
-    return new Promise(function (resolve, reject){
-    let url = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol='+symbol+'&apikey='+process.env.API_KEY;
-    request.get({
-        url: url,
-        json: true,
-        headers: {'User-Agent': 'request'}
-    }, (err, res, data) => {
-        if (err) {
-        console.log('Error:', err);
-        reject(err);
-        } else if (res.statusCode !== 200) {
-        console.log('Status:', res.statusCode);
-        } else {
-            if(isEmpty(data)){
-                return resolve(0);
-            }
-        let globalQuote = data['Global Quote'];
-        let stockQuote = globalQuote['05. price'];
-        if(stockQuote === undefined){
-            //this is for some quotes that would be pulled by yahoo stock
-            stockQuote = -1;
-        }
-        resolve(stockQuote);
-        }
-    });
-    })
-    
-}
-
-// function callTiingo(){
-//     var requestOptions = {
-//     'url': 'https://api.tiingo.com/iex/?token=0b59a495e8d99ddc351b4e713924d0c192f6f216',
-//     'headers': {
-//         'Content-Type': 'application/json'
-//         }
-// };
-// request(requestOptions,
-//     function(error, response, body) {
-//         console.log(body['0']);
-//     }
-// );  }
-
 async function run(){
-    //path must be your absolute file path
-    // callTiingo();
-    getQuote();
 
     const path = 'file:///Users/aelna/Documents/MachineLearning/MLTrading/server/src/services/model/model.json'
     const model1 = await tf.loadLayersModel(path);
@@ -208,9 +160,6 @@ async function run(){
     }
     console.log("Sell these:" + sell.toString());
     console.log("Buy these: " + buy.toString());
-    let prediction = new Map();
-    prediction.set("buy", buy);
-    prediction.set("sell", sell);
     return  {buy , sell};
 }
 
