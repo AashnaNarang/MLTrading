@@ -1091,17 +1091,17 @@ aggregate-error@^3.0.0:
     clean-stack "^2.0.0"
     indent-string "^4.0.0"
 
-ajv-formats@^2.1.1:
+ajv-formats@2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/ajv-formats/-/ajv-formats-2.1.1.tgz#6e669400659eb74973bbf2e33327180a0996b520"
   integrity sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==
   dependencies:
     ajv "^8.0.0"
 
-ajv@8.9.0:
-  version "8.9.0"
-  resolved "https://registry.yarnpkg.com/ajv/-/ajv-8.9.0.tgz#738019146638824dea25edcf299dcba1b0e7eb18"
-  integrity sha512-qOKJyNj/h+OWx7s5DePL6Zu1KeM9jPZhwBqs+7DzP6bGOvqzVCSf0xueYmVuaC/oQ/VtS2zLMLHdQFbkka+XDQ==
+ajv@8.10.0, ajv@^8.0.0:
+  version "8.10.0"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-8.10.0.tgz#e573f719bd3af069017e3b66538ab968d040e54d"
+  integrity sha512-bzqAEZOjkrUMl2afH8dknrq5KEk2SrwdBROR+vH1EKVQTqaUbJVPdc/gEdggTMM0Se+s+Ja4ju4TlNcStKl2Hw==
   dependencies:
     fast-deep-equal "^3.1.1"
     json-schema-traverse "^1.0.0"
@@ -1116,16 +1116,6 @@ ajv@^6.10.0, ajv@^6.12.3, ajv@^6.12.4:
     fast-deep-equal "^3.1.1"
     fast-json-stable-stringify "^2.0.0"
     json-schema-traverse "^0.4.1"
-    uri-js "^4.2.2"
-
-ajv@^8.0.0:
-  version "8.10.0"
-  resolved "https://registry.yarnpkg.com/ajv/-/ajv-8.10.0.tgz#e573f719bd3af069017e3b66538ab968d040e54d"
-  integrity sha512-bzqAEZOjkrUMl2afH8dknrq5KEk2SrwdBROR+vH1EKVQTqaUbJVPdc/gEdggTMM0Se+s+Ja4ju4TlNcStKl2Hw==
-  dependencies:
-    fast-deep-equal "^3.1.1"
-    json-schema-traverse "^1.0.0"
-    require-from-string "^2.0.2"
     uri-js "^4.2.2"
 
 ajv@^8.0.1:
@@ -7585,12 +7575,12 @@ y18n@^5.0.5:
   integrity sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==
 
 yahoo-finance2@^2.1.2:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/yahoo-finance2/-/yahoo-finance2-2.1.2.tgz#9c0c2d27ebc4e7830cd622fc7929ad8e9112f9a2"
-  integrity sha512-qg6+/lQgDwJmqfBW9nHIArp4t73Y7fzWRChrDjKiGe8jtBm32R6rtWm9WNh56FmJ7tmKhQYe2mY6CqPWdeqIFQ==
+  version "2.1.6"
+  resolved "https://registry.yarnpkg.com/yahoo-finance2/-/yahoo-finance2-2.1.6.tgz#290e1f7143c30fbf49d9648b3fe58ff6614d1962"
+  integrity sha512-Ti+JYH6b7FRw+wWmae9eHoad1Yqke9ArXcKpfWAif4H8x4FpA3mjsAZl7XQsD6rajdxgme0Om0gh1ckFbzbTHA==
   dependencies:
-    ajv "8.9.0"
-    ajv-formats "^2.1.1"
+    ajv "8.10.0"
+    ajv-formats "2.1.1"
     node-fetch "^2.6.1"
 
 yallist@^3.0.0, yallist@^3.0.2, yallist@^3.1.1:

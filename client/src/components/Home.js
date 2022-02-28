@@ -3,7 +3,6 @@ import {Link} from 'react-router-dom';
 import GreyBox from './GreyBox';
 import '../Home.css';
 import TradesTable from "../containers/TradesTable";
-import SecurityBox from "./SecurityBox";
 import SecuritiesColumn from "../containers/SecuritiesColumn";
 import PortfolioGraph from './PortfolioGraph';
 
@@ -27,6 +26,17 @@ const Home = props => {
   return (
     <>
       <div className="flex-col main">
+        <Link
+          to="/settings"
+          style={{
+            width: '140px',
+            borderRadius: '3px',
+            letterSpacing: '1.5px',
+          }}
+          className="btn btn-large waves-effect waves-light hoverable blue accent-3"
+        >
+          Settings
+        </Link>
         <div className="hello-row">
           <h2 className="hello"> Hello, you have made  </h2>
           <h2 className="profit"> ${profit}</h2>
