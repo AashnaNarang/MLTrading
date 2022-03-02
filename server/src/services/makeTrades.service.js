@@ -50,7 +50,7 @@ function getQuote(symbol){
     
 }
 // job automatically runs every day at 9:30 am (00 seconds, 30 minutes, 09 hours)
-const task = cron.schedule('00 35 13 * * *', async () => {
+const task = cron.schedule('00 48 00 * * *', async () => {
     console.log("start");
     const prediction =  await machineLearningService.run();
     const buy = prediction.buy;
@@ -68,16 +68,19 @@ const task = cron.schedule('00 35 13 * * *', async () => {
             throw new Error("Failed to get portfolios in makeTradesJob");
         }
         portfolios.map(async (portfolio) => {
+            // await portfolioService.updatePortfolioById(portfolio.id, {
+            //     freeCash: 2000,
+            //   });
             let securities = await Security.find({portfolio: portfolio.id}); 
             //sell the securities in order to have more free cash
-            await sellSecurities(sell, portfolio, securities);
+            await sellSecurities(sell, await portfolioService.getPortfolioById(portfolio.id), securities);
             let done = false;
             while (!done){
-                let canAfford = await getSecuritiesWithBuyAndCanAfford(buy, portfolio);
+                let canAfford = await getSecuritiesWithBuyAndCanAfford(buy, await portfolioService.getPortfolioById(portfolio.id));
                 console.log("we can afford this : " + canAfford);
                 if (canAfford.length != 0) {
-                    await buySecurities(canAfford, portfolio);
-                    await sleep(1000); // sleep for 1 seconds
+                    await buySecurities(canAfford, await portfolioService.getPortfolioById(portfolio.id));
+                    await sleep(3000); // sleep for 3 seconds
                 } else {
                     done = true;
                 }
@@ -90,6 +93,7 @@ const task = cron.schedule('00 35 13 * * *', async () => {
 
 
 const sellSecurities = async (sell, portfolio, securities) => {
+    console.log("this is the securities lenght " + securities.length);
     for (let i = 0; i < securities.length; i++) {
         let security = securities[i];
         if (sell.includes(security.securityCode)) {
@@ -102,7 +106,7 @@ const getSecuritiesWithBuyAndCanAfford = async (buy, portfolio) => {
     let canAfford = [];
     for (let b of buy) {
         let price = stock_map.get(b);
-        if(price === -1){
+        if(price == -1){
             const quote = await yahooFinance.quote(b);
             price = quote.regularMarketPrice;
         }
@@ -114,11 +118,19 @@ const getSecuritiesWithBuyAndCanAfford = async (buy, portfolio) => {
 }
 
 const sellSecurity = async (portfolio, security) => {
+    console.log("selling port" + portfolio);
+    console.log("selling port cash" + portfolio.freeCash);
+
     // let currPrice = await getQuote(security.securityCode);
     const quote = await yahooFinance.quote(security.securityCode);
     let currPrice = quote.regularMarketPrice;
     console.log("the code is : " + security.securityCode);
     console.log("the current price is : " + currPrice);
+    if(typeof currPrice !== 'undefined'){
+        currPrice = 1;
+    }
+    console.log("the current price is : " + currPrice);
+
     let sharesForStock = security.shares;
     await tradeService.addTrade({
         portfolio: portfolio.id,
@@ -149,8 +161,9 @@ const buySecurities = async (canAfford, portfolio) => {
     console.log("this is the currPrice for the code " + currPrice);
     console.log("this is the dsiplayname for the code " + quote.displayName);
     console.log("this is the dsiplayname for the stockcode now is  " + stocks.lookup(code));
+    console.log("selling port" + portfolio);
+    console.log("selling port cash" + portfolio.freeCash);
 
-    await sleep(1000); // sleep for 1 seconds
     let security = await Security.findOne({portfolio: portfolio.Id, securityCode: code});
     if (security) {
         await securityService.updateSecurityById(code, {
