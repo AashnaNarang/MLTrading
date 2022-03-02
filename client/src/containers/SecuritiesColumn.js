@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import axios from 'axios';
 import ArrowBack from "@material-ui/icons/ArrowBack"
 import ArrowForward from "@material-ui/icons/ArrowForward"
@@ -10,77 +10,80 @@ import {generateHeaders} from "../api/utilities";
 
 
 class SecuritiesColumn extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      securities: [],
-      page: 1,
-      totalPages: 1,
-    };
-  }
-
-  componentDidUpdate(prevProps) {
-    const { page } = this.state
-    const { portfolioId } = this.props
-
-    if (prevProps.portfolioId !== portfolioId) {
-      const securityParams = {portfolio: portfolioId, sortBy: 'securityName:asc', limit: 5, page}
-      axios
-        .get(`${HOST}${SECURITY_URI}`, {params: securityParams, ...generateHeaders()})
-        .then(res => {
-          this.setState({securities: res.data.results, totalPages: res.data.totalPages});
-        })
-        .catch(err => {
-          console.log(`error: ${err.message}`);
-        });
+    constructor(props) {
+        super(props);
+        this.state = {
+            securities: [],
+            page: 1,
+            totalPages: 1,
+        };
     }
 
-  }
+    componentDidUpdate(prevProps) {
+        const {page} = this.state
+        const {portfolioId} = this.props
 
-  onPageChange = (page) => () => {
-    const { portfolioId } = this.props
+        if (prevProps.portfolioId !== portfolioId) {
+            const securityParams = {portfolio: portfolioId, sortBy: 'securityName:asc', limit: 5, page}
+            axios
+                .get(`${HOST}${SECURITY_URI}`, {params: securityParams, ...generateHeaders()})
+                .then(res => {
+                    this.setState({securities: res.data.results, totalPages: res.data.totalPages});
+                })
+                .catch(err => {
+                    console.log(`error: ${err.message}`);
+                });
+        }
 
-    this.setState({page})
+    }
 
+    onPageChange = (page) => () => {
+        const {portfolioId} = this.props
 
-    const securityParams = {portfolio: portfolioId, sortBy: 'securityName:asc', limit: 5, page}
-    axios
-      .get(`${HOST}${SECURITY_URI}`, {params: securityParams, ...generateHeaders()})
-      .then(res => {
-        this.setState({securities: res.data.results});
-      })
-      .catch(err => {
-        console.log(`error: ${err.message}`);
-      });
-  }
-
-  render() {
-    const { securities, page, totalPages } = this.state
-
-    const securityBoxes = securities.map((security) => {
-      const {securityName, shares, avgPrice, securityCode, totalValue} = security
-      return <SecurityBox name={securityName} shares={shares} avgPrice={avgPrice} ticker={securityCode} totalValue={totalValue}/>
-    })
+        this.setState({page})
 
 
+        const securityParams = {portfolio: portfolioId, sortBy: 'securityName:asc', limit: 5, page}
+        axios
+            .get(`${HOST}${SECURITY_URI}`, {params: securityParams, ...generateHeaders()})
+            .then(res => {
+                this.setState({securities: res.data.results});
+            })
+            .catch(err => {
+                console.log(`error: ${err.message}`);
+            });
+    }
 
-    return(
-      <div className='sc-flex-col'>
-        <h5 className='sc-securities-title'>Your Securities</h5>
-        <div className='sc-column'>
-          {securityBoxes}
-        </div>
-        {securities.length !==0 && <div className='sc-buttons'>
-          <Button variant="outlined" startIcon={<ArrowBack />} onClick={this.onPageChange(page-1)} disabled={page===1}>
-            Prev
-          </Button>
-          <Button variant="outlined" endIcon={<ArrowForward />} onClick={this.onPageChange(page+1)} disabled={page===totalPages}>
-            Next
-          </Button>
-        </div>}
-      </div>
-    )
-  }
+    render() {
+        const {securities, page, totalPages} = this.state
+
+        const securityBoxes = securities.map((security) => {
+            const {currentPrice, currTotalValue, totalReturn} = security
+            const {securityName, shares, securityCode, totalValue, avgPrice, lastUpdated} = security.security
+            return <SecurityBox name={securityName} shares={shares} currentPrice={currentPrice}
+                                ticker={securityCode} totalValue={totalValue} currTotalValue={currTotalValue}
+                                totalReturn={totalReturn} avgPrice={avgPrice} lastUpdated={lastUpdated}/>
+        })
+
+        return (
+            <div className='sc-flex-col'>
+                <h5 className='sc-securities-title'>Your Securities</h5>
+                <div className='sc-column'>
+                    {securityBoxes}
+                </div>
+                {securities.length !== 0 && <div className='sc-buttons'>
+                    <Button variant="outlined" startIcon={<ArrowBack/>} onClick={this.onPageChange(page - 1)}
+                            disabled={page === 1}>
+                        Prev
+                    </Button>
+                    <Button variant="outlined" endIcon={<ArrowForward/>} onClick={this.onPageChange(page + 1)}
+                            disabled={page === totalPages}>
+                        Next
+                    </Button>
+                </div>}
+            </div>
+        )
+    }
 }
 
 export default SecuritiesColumn;
