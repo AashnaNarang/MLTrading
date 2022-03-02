@@ -7,3 +7,5 @@ module.exports.portfolioValuesService = require('./portfolioValues.service');
 module.exports.addPortfolioValuesService = require('./addPortfolioValues.service');
 module.exports.tradeService = require('./trade.service');
 module.exports.securityService = require('./security.service');
+module.exports.machineLearningService = require('./machineLearning.service');
+module.exports.makeTradeService = require('./makeTrades.service');

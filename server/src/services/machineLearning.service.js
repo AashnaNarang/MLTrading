@@ -125,7 +125,7 @@ function preprocessEMAandSMA(emaData, smaData){
 }
 
 async function run(){
-    //path must be your absolute file path  
+
     const path = 'file:///Users/aelna/Documents/MachineLearning/MLTrading/server/src/services/model/model.json'
     const model1 = await tf.loadLayersModel(path);
         
@@ -160,6 +160,7 @@ async function run(){
     }
     console.log("Sell these:" + sell.toString());
     console.log("Buy these: " + buy.toString());
+    return  {buy , sell};
 }
 
 // run();
