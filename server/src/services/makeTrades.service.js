@@ -50,7 +50,7 @@ function getQuote(symbol){
     
 }
 // job automatically runs every day at 9:30 am (00 seconds, 30 minutes, 09 hours)
-const task = cron.schedule('00 48 00 * * *', async () => {
+const task = cron.schedule('00 17 16 * * *', async () => {
     console.log("start");
     const prediction =  await machineLearningService.run();
     const buy = prediction.buy;
@@ -68,9 +68,10 @@ const task = cron.schedule('00 48 00 * * *', async () => {
             throw new Error("Failed to get portfolios in makeTradesJob");
         }
         portfolios.map(async (portfolio) => {
-            // await portfolioService.updatePortfolioById(portfolio.id, {
-            //     freeCash: 2000,
-            //   });
+            await portfolioService.updatePortfolioById(portfolio.id, {
+                currPortfolioValue: 2000,
+                freeCash: 2000,
+              });
             let securities = await Security.find({portfolio: portfolio.id}); 
             //sell the securities in order to have more free cash
             await sellSecurities(sell, await portfolioService.getPortfolioById(portfolio.id), securities);
@@ -126,12 +127,13 @@ const sellSecurity = async (portfolio, security) => {
     let currPrice = quote.regularMarketPrice;
     console.log("the code is : " + security.securityCode);
     console.log("the current price is : " + currPrice);
-    if(typeof currPrice !== 'undefined'){
+    if(typeof currPrice === 'undefined'){
         currPrice = 1;
     }
     console.log("the current price is : " + currPrice);
 
     let sharesForStock = security.shares;
+    let profit = (currPrice * sharesForStock) - security.avgPrice ;
     await tradeService.addTrade({
         portfolio: portfolio.id,
         price: currPrice, //getstockprice,
@@ -146,6 +148,7 @@ const sellSecurity = async (portfolio, security) => {
     await portfolioService.updatePortfolioById(portfolio.id, {
       currPortfolioValue: (portfolio.currPortfolioValue + (currPrice * sharesForStock)).toFixed(2),
       freeCash: (portfolio.freeCash + (currPrice * sharesForStock)).toFixed(2),
+      profit: (portfolio.profit + profit)
     });
     await securityService.deleteSecurityById(security.id);   
 

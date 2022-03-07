@@ -128,16 +128,20 @@ async function run(){
 
     const path = 'file:///Users/aelna/Documents/MachineLearning/MLTrading/server/src/services/model/model.json'
     const model1 = await tf.loadLayersModel(path);
-        
+
     const buy = [];
     const sell = [];
 
     for(element of symbols){
+        console.log("machineLearnign serivce : " + element);
         await sleep(1000); // sleep for 1 seconds
         //get technical indicator per stock
         let rsiData = await getRSI(element);
         let emaData = await getEMA(element);
         let smaData = await getSMA(element);
+        // console.log("machineLearnign serivce : " + rsiData);
+        // console.log("machineLearnign serivce : " + emaData);
+        // console.log("machineLearnign serivce : " + smaData);
 
         //preprocess the data
         let data = preprocessEMAandSMA(emaData,smaData);
@@ -150,6 +154,7 @@ async function run(){
         //predict - results would be between 0 and 1, so round to nearest
         const outputArray = model1.predict(tf.tensor([arr]));
         const prediction = Math.round(outputArray.dataSync());
+        // console.log("machineLearnign serivce : " + prediction);
 
         //One is buy, 0 is sell
         if(prediction == 1){
