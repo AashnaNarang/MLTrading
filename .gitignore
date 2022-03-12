@@ -3,3 +3,5 @@ server/.env.example
 *.example
 client/src/.vscode/settings.json
 .vscode/launch.json
+.idea/workspace.xml
+.idea/vcs.xml
