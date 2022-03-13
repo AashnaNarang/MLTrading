@@ -50,7 +50,7 @@ function getQuote(symbol){
     
 }
 // job automatically runs every day at 9:30 am (00 seconds, 30 minutes, 09 hours)
-const task = cron.schedule('00 17 16 * * *', async () => {
+const task = cron.schedule('00 03 21 * * *', async () => {
     console.log("start");
     const prediction =  await machineLearningService.run();
     const buy = prediction.buy;
@@ -113,7 +113,7 @@ const getSecuritiesWithBuyAndCanAfford = async (buy, portfolio) => {
 }
 
 const sellSecurity = async (portfolio, security) => {
-    let currPrice = getYahooPrice(security.securityCode);
+    let currPrice = await getYahooPrice(security.securityCode);
     // console.log("the code is : " + security.securityCode);
     // console.log("the current price is : " + currPrice);
     if(typeof currPrice === 'undefined'){
@@ -146,7 +146,7 @@ const buySecurities = async (canAfford, portfolio) => {
     let rndInt = randomIntFromInterval(0, canAfford.length - 1);
     let code = canAfford[rndInt];
     let freeCash = portfolio.freeCash;
-    let currPrice = getYahooPrice(code);
+    let currPrice = await getYahooPrice(code);
 
     //Comment out for future testing
     // console.log("this is the random buy " + code);
@@ -183,11 +183,11 @@ const buySecurities = async (canAfford, portfolio) => {
     });
 }
 
-function getYahooPrice(code){
+
+const getYahooPrice = async (code) => {
     let quote = await yahooFinance.quote(code);
     return quote.regularMarketPrice;
 }
-
 /**
  * 
  * @param {*} min 
