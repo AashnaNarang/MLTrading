@@ -152,6 +152,9 @@ async function run(){
         const outputArray = model1.predict(tf.tensor([arr]));
         const prediction = Math.round(outputArray.dataSync());
 
+        //for testing
+        console.log("The symbol is "+ element+ "and we " + prediction);
+
         //One is buy, 0 is sell
         if(prediction == 1){
             buy.push(element);
@@ -164,7 +167,7 @@ async function run(){
     return  {buy , sell};
 }
 
-// run();
+run();
 
 module.exports = {
     run,
