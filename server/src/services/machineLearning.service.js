@@ -126,9 +126,10 @@ function preprocessEMAandSMA(emaData, smaData){
 
 async function run(){
 
-    const path = 'file:///Users/aelna/Documents/MachineLearning/MLTrading/server/src/services/model/model.json'
-    const model1 = await tf.loadLayersModel(path);
-
+    // const path = 'file:///Users/aelna/Documents/MachineLearning/MLTrading/server/src/services/model/model.json'
+    // const model1 = await tf.loadLayersModel(path);
+    const handler = tf.io.fileSystem('src/services/model/model.json');
+    const model1 = await tf.loadLayersModel(handler);
     const buy = [];
     const sell = [];
 
