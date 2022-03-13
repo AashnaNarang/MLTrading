@@ -139,9 +139,6 @@ async function run(){
         let rsiData = await getRSI(element);
         let emaData = await getEMA(element);
         let smaData = await getSMA(element);
-        // console.log("machineLearnign serivce : " + rsiData);
-        // console.log("machineLearnign serivce : " + emaData);
-        // console.log("machineLearnign serivce : " + smaData);
 
         //preprocess the data
         let data = preprocessEMAandSMA(emaData,smaData);
@@ -154,7 +151,6 @@ async function run(){
         //predict - results would be between 0 and 1, so round to nearest
         const outputArray = model1.predict(tf.tensor([arr]));
         const prediction = Math.round(outputArray.dataSync());
-        // console.log("machineLearnign serivce : " + prediction);
 
         //One is buy, 0 is sell
         if(prediction == 1){

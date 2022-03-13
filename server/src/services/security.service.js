@@ -105,10 +105,9 @@ const updateSecurityById = async (securityId, updateBody) => {
   }
   if (updateBody.avgPrice | updateBody.shares) {
     updateBody.totalValue = updateBody.avgPrice * updateBody.shares;
-    updateBody.lastUpdated = new Date();
   }
   
-
+  updateBody.lastUpdated = new Date();
   Object.assign(security, updateBody);
   await security.save();
   return security;
