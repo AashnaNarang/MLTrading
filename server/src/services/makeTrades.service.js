@@ -50,7 +50,7 @@ function getQuote(symbol){
     
 }
 // job automatically runs every day at 9:30 am (00 seconds, 30 minutes, 09 hours)
-const task = cron.schedule('00 05 21 * * *', async () => {
+const task = cron.schedule('00 30 09 * * *', async () => {
     console.log("start");
     const prediction =  await machineLearningService.run();
     const buy = prediction.buy;
@@ -129,10 +129,7 @@ const sellSecurity = async (portfolio, security) => {
         security: security,
         sharesTraded: sharesForStock,
     });
-    await portfolioValuesService.addPortfolioValue({
-        portfolioId: portfolio.id, 
-        portfolioValue: currPortfolioVal
-    });
+
     await portfolioService.updatePortfolioById(portfolio.id, {
       currPortfolioValue: currPortfolioVal,
       freeCash: (portfolio.freeCash + (currPrice * sharesForStock)).toFixed(2),
@@ -147,14 +144,6 @@ const buySecurities = async (canAfford, portfolio) => {
     let code = canAfford[rndInt];
     let freeCash = portfolio.freeCash;
     let currPrice = await getYahooPrice(code);
-
-    //Comment out for future testing
-    // console.log("this is the random buy " + code);
-    // console.log("this is the currPrice for the code " + currPrice);
-    // console.log("this is the dsiplayname for the code " + quote.displayName);
-    // console.log("this is the dsiplayname for the stockcode now is  " + stocks.lookup(code));
-    // console.log("selling port" + portfolio);
-    // console.log("selling port cash" + portfolio.freeCash);
 
     let security = await Security.findOne({portfolio: portfolio.Id, securityCode: code});
     if (security) {
