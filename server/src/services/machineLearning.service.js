@@ -126,8 +126,8 @@ function preprocessEMAandSMA(emaData, smaData){
 
 async function run(){
     //path must be your absolute file path  
-    const path = 'file:///Users/aelna/Documents/MachineLearning/MLTrading/server/src/services/model/model.json'
-    const model1 = await tf.loadLayersModel(path);
+    const handler = tf.io.fileSystem('src/services/model/model.json');
+    const model1 = await tf.loadLayersModel(handler);
         
     const buy = [];
     const sell = [];
@@ -150,7 +150,7 @@ async function run(){
         //predict - results would be between 0 and 1, so round to nearest
         const outputArray = model1.predict(tf.tensor([arr]));
         const prediction = Math.round(outputArray.dataSync());
-
+        console.log(prediction);
         //One is buy, 0 is sell
         if(prediction == 1){
             buy.push(element);
@@ -162,7 +162,7 @@ async function run(){
     console.log("Buy these: " + buy.toString());
 }
 
-// run();
+run();
 
 module.exports = {
     run,
