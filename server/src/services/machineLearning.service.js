@@ -162,8 +162,6 @@ async function run(){
     return  {buy , sell};
 }
 
-run();
-
 module.exports = {
     run,
   };

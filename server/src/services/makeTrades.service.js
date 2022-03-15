@@ -135,8 +135,10 @@ const sellSecurity = async (portfolio, security) => {
       freeCash: (portfolio.freeCash + (currPrice * sharesForStock)).toFixed(2),
       profit: (portfolio.profit + profit)
     });
-    await securityService.deleteSecurityById(security.id);   
-
+    await securityService.updateSecurityById(code, {
+        avgPrice: 0,
+        shares: 0,
+    });       
 }
 
 const buySecurities = async (canAfford, portfolio) => {
