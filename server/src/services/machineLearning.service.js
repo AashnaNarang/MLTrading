@@ -125,15 +125,13 @@ function preprocessEMAandSMA(emaData, smaData){
 }
 
 async function run(){
-    //path must be your absolute file path  
-    const path = 'file:///Users/aelna/Documents/MachineLearning/MLTrading/server/src/services/model/model.json'
-    const model1 = await tf.loadLayersModel(path);
-        
+    const handler = tf.io.fileSystem('src/services/model/model.json');
+    const model1 = await tf.loadLayersModel(handler);
     const buy = [];
     const sell = [];
 
     for(element of symbols){
-        await sleep(1000); // sleep for 1 seconds
+        await sleep(1000); // sleep for 1 seconds for the api
         //get technical indicator per stock
         let rsiData = await getRSI(element);
         let emaData = await getEMA(element);
@@ -158,11 +156,11 @@ async function run(){
             sell.push(element);
         }
     }
-    console.log("Sell these:" + sell.toString());
-    console.log("Buy these: " + buy.toString());
+    // For testing
+    // console.log("Sell these:" + sell.toString());
+    // console.log("Buy these: " + buy.toString());
+    return  {buy , sell};
 }
-
-// run();
 
 module.exports = {
     run,

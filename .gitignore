@@ -3,5 +3,10 @@ server/.env.example
 *.example
 client/src/.vscode/settings.json
 .vscode/launch.json
-.idea/workspace.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/runConfigurations.xmls
 .idea/vcs.xml
+.idea/codeStyles/Project.xml
+.idea/codeStyles/codeStyleConfig.xml
+MLTrading.iml
