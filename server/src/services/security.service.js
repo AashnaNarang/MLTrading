@@ -32,16 +32,18 @@ const querySecurities = async (filter, options) => {
   let results = [];
   for (let i = 0; i < securities.results.length; i++) {
     let security = securities.results[i];
-    const quote = await yahooFinance.quote(security.securityCode);
-    let currPrice = quote.regularMarketPrice;
-    let currTotalValue = security.shares * currPrice;
-    let info = {
-      currentPrice: currPrice, 
-      currTotalValue: currTotalValue, 
-      totalReturn: currTotalValue - security.totalValue,
-      security: security
-    };
-    results.push(info);
+    if (security.shares > 0) {
+      const quote = await yahooFinance.quote(security.securityCode);
+      let currPrice = quote.regularMarketPrice;
+      let currTotalValue = security.shares * currPrice;
+      let info = {
+        currentPrice: currPrice, 
+        currTotalValue: currTotalValue, 
+        totalReturn: currTotalValue - security.totalValue,
+        security: security
+      };
+      results.push(info);
+    }
   }
 
   // reconstruct the return value

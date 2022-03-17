@@ -65,7 +65,7 @@ const Register = props => {
                         name="password"
                     />
                     <span className="validity"></span>
-                    <label>Must be 8-15 characters, include 1 number, and 1 letter.</label>
+                    <label>Must be at least 8 characters, include 1 number, and 1 letter.</label>
                 </div>
 
                 <div className="re-enter-password-input-field-register-tab">
