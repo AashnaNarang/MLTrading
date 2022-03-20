@@ -13,6 +13,17 @@
     line-height: 73px;
     letter-spacing: 0em;
 }
+
+.loss {
+    color: #a81212;
+    font-family: Inter;
+    font-size: 60px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 73px;
+    letter-spacing: 0em;
+}
+
 .hello {
     font-family: Inter;
     font-size: 60px;

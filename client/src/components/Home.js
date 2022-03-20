@@ -6,6 +6,28 @@ import TradesTable from "../containers/TradesTable";
 import SecuritiesColumn from "../containers/SecuritiesColumn";
 import PortfolioGraph from './PortfolioGraph';
 
+ function calculateSign(profit) {
+  let word;
+  if (profit > 0){
+      word = "made ";
+  }
+  else{
+    word = "lost ";
+  }
+  return word;
+}
+
+function profitClassName(profit) {
+  let className;
+  if (profit > 0){
+      className = "profit";
+  }
+  else{
+    className = "loss";
+  }
+  return className;
+}
+
 const Home = props => {
 
     const {portfolio, logout} = props;
@@ -38,8 +60,8 @@ const Home = props => {
           Settings
         </Link>
         <div className="hello-row">
-          <h2 className="hello"> Hello, you have made  </h2>
-          <h2 className="profit"> ${profit}</h2>
+          <h2 className="hello"> Hello, you have {calculateSign(profit)}</h2>
+          <h2 className={profitClassName(profit)}> ${Math.abs(profit)}</h2>
         </div>
         <div className='flex-row'>
           <div className='flex-col left-col'>
