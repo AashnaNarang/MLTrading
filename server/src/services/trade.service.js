@@ -18,7 +18,7 @@ const addTrade = async (tradeBody) => {
   tradeBody.transactionCost = portfolio.transactionCost;
 
   if (tradeBody.action == "Sold") {
-    tradeBody.profit = (security.avgPrice - tradeBody.price) * tradeBody.sharesTraded;
+    tradeBody.profit = ((tradeBody.price - security.avgPrice ) * tradeBody.sharesTraded).toFixed(2);
   } else {
     tradeBody.profit = 0.00;
   }

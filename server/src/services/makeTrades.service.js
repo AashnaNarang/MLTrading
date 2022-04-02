@@ -6,6 +6,7 @@ const yahooFinance = require('yahoo-finance2').default;
 const sleep = (waitTimeInMs) => new Promise(resolve => setTimeout(resolve, waitTimeInMs));
 const request = require('request');
 const stocks = require('stock-ticker-symbol');
+// const { default: quote } = require('yahoo-finance2/dist/esm/src/modules/quote');
 
 //This contains the symbol and its current price
 const stock_map = new Map();
@@ -50,11 +51,12 @@ function getQuote(symbol){
     
 }
 // job automatically runs every day at 9:30 am (00 seconds, 30 minutes, 09 hours)
-const task = cron.schedule('00 30 09 * * *', async () => {
+const task = cron.schedule('00 28 09 * * *', async () => {
     console.log("start");
     const prediction =  await machineLearningService.run();
     const buy = prediction.buy;
     const sell = prediction.sell;
+    console.log("Model ran");
     //create a map for the stocks and price
     //the price will return a json body request, need to parse and find the askPrice
     for(element of symbols){
@@ -68,6 +70,10 @@ const task = cron.schedule('00 30 09 * * *', async () => {
         }
         portfolios.map(async (portfolio) => {
             let securities = await Security.find({portfolio: portfolio.id}); 
+            // await portfolioService.updatePortfolioById(portfolio.id, {
+            //     currPortfolioValue: 2000,
+            //     freeCash: 5000,
+            //   });
             //sell the securities in order to have more free cash
             await sellSecurities(sell, await portfolioService.getPortfolioById(portfolio.id), securities);
             let done = false;
@@ -102,10 +108,9 @@ const getSecuritiesWithBuyAndCanAfford = async (buy, portfolio) => {
     for (let b of buy) {
         let price = stock_map.get(b);
         if(price == -1){
-            const quote = await yahooFinance.quote(b);
-            price = quote.regularMarketPrice;
+            console.log("dont")
         }
-        if (price < portfolio.freeCash) {
+        else if (price < portfolio.freeCash) {
             canAfford.push(b);
         }
     }
@@ -132,10 +137,10 @@ const sellSecurity = async (portfolio, security) => {
 
     await portfolioService.updatePortfolioById(portfolio.id, {
       currPortfolioValue: currPortfolioVal,
-      freeCash: (portfolio.freeCash + (currPrice * sharesForStock)).toFixed(2),
-      profit: (portfolio.profit + profit)
+      freeCash: (portfolio.freeCash - 1.5 + (currPrice * sharesForStock)).toFixed(2),
+      profit: (portfolio.profit + profit).toFixed(2)
     });
-    await securityService.updateSecurityById(code, {
+    await securityService.updateSecurityById(security.id, {
         avgPrice: 0,
         shares: 0,
     });       
@@ -146,10 +151,28 @@ const buySecurities = async (canAfford, portfolio) => {
     let code = canAfford[rndInt];
     let freeCash = portfolio.freeCash;
     let currPrice = await getYahooPrice(code);
-
-    let security = await Security.findOne({portfolio: portfolio.Id, securityCode: code});
-    if (security) {
-        await securityService.updateSecurityById(code, {
+    console.log("current price is  " + currPrice);
+    if(currPrice == -1){
+        return;
+    }
+    console.log(portfolio.id);
+    let securities = await Security.find({portfolio: portfolio.id});
+    let flag = false;
+    let security;
+    for (let i = 0; i < securities.length; i++) {
+        let x = securities[i];
+        console.log("x " + x.securityCode);
+        console.log("code " + code);
+        if (code == x.securityCode) {
+            flag = true;
+            security = x;
+            break;
+        }
+    }
+    if (flag) {
+        console.log("heyyyy")
+        console.log(security);
+        await securityService.updateSecurityById(security.id, {
             avgPrice: ((security.avgPrice * security.shares + currPrice) / (security.shares + 1)).toFixed(2),
             shares: security.shares + 1,
         });       
@@ -170,15 +193,81 @@ const buySecurities = async (canAfford, portfolio) => {
         sharesTraded: 1,
     });
     await portfolioService.updatePortfolioById(portfolio.id, {
-      freeCash: (freeCash - currPrice).toFixed(2),
+      freeCash: (freeCash - currPrice - 1.5).toFixed(2),
     });
 }
 
 
-const getYahooPrice = async (code) => {
-    let quote = await yahooFinance.quote(code);
-    return quote.regularMarketPrice;
+    // Security.findOne({portfolio: portfolio.id, securityCode: code}, async function(err,security) { 
+    //     console.log(security);
+    //     if (security) {
+    //         await securityService.updateSecurityById(security.id, {
+    //             avgPrice: ((security.avgPrice * security.shares + currPrice) / (security.shares + 1)).toFixed(2),
+    //             shares: security.shares + 1,
+    //         });       
+    //     } else {
+    //         security = await securityService.createSecurity({
+    //              portfolio: portfolio.id,
+    //              securityName: stocks.lookup(code),
+    //              securityCode: code,
+    //              avgPrice: currPrice,
+    //              shares: 1,
+    //          });
+    //     }
+    //     await tradeService.addTrade({
+    //         portfolio: portfolio.id,
+    //         price: currPrice,
+    //         action: "Purchased",
+    //         security: security,
+    //         sharesTraded: 1,
+    //     });
+    //     await portfolioService.updatePortfolioById(portfolio.id, {
+    //       freeCash: (freeCash - currPrice - 1.5).toFixed(2),
+    //     });
+    //  });
+    // }
+
+
+
+
+const getYahooPrice = async (symbol) => {
+//     let quote = await yahooFinance.quote(code);
+//     return quote.regularMarketPrice;
+return new Promise(function (resolve, reject){
+    let url = 'https://yfapi.net/v6/finance/quote?region=US&lang=en&symbols=+'+ symbol;
+    request.get({
+        url: url,
+        json: true,
+        headers: {'User-Agent': 'request','X-API-KEY': 'xAX9wtCgov27Lj2oof5Zu51wxHt5Cqp4K2TMaADj'}
+    }, (err, res, data) => {
+        if (err) {
+        console.log('Error:', err);
+        reject(err);
+        } else if (res.statusCode !== 200) {
+        console.log('Status:', res.statusCode);
+        } else {
+            if(isEmpty(data)){
+                return resolve(-1);
+            }
+            if(data === undefined){
+                return resolve(-1);
+            }
+            let quoteResponse = data['quoteResponse'];
+            let result = quoteResponse['result'];
+            let gg = result[0];
+            console.log("Gg" + gg);
+            if(gg === undefined){
+                return resolve(-1);
+            }
+            if(gg.regularMarketPrice === undefined){
+                return resolve(-1);
+            }
+        resolve(gg.regularMarketPrice);
+        }
+    });
+    })
 }
+// }
 /**
  * 
  * @param {*} min 
