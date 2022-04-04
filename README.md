@@ -2,15 +2,16 @@
 
 # Setup Instruction
 
-1. Clone the repo
-2. Add the .env file to the /server folder
-3. Run the following commands
+1. Make sure you have a version of Node.js installed that is higher than version 14.0.0. Use https://nodejs.org/en/download/ to download Node.js
+2. Clone the repo
+3. Add the .env file to the /server folder
+4. Run the following commands
     ```
     $ cd server
     $ yarn install
     $ yarn dev
     ```
-4. Now open another terminal to run the client in
+5. Now open another terminal to run the client in
     ```
     $ cd client
     $ yarn install
@@ -22,5 +23,5 @@
     ```
 
     Open localhost:3000 to open the react app
-5. Download MongoDB from here: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/ 
-6. To see the local db in MongoDB Compass, open MongoDB Compass and use what is written in your .env file as the connection string
+6. Download MongoDB from here: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/ 
+7. To see the local db in MongoDB Compass, open MongoDB Compass and use what is written in your .env file as the connection string
