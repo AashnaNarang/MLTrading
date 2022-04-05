@@ -56,6 +56,8 @@ const task = cron.schedule('00 20 09 * * *', async () => {
     const prediction =  await machineLearningService.run();
     const buy = prediction.buy;
     const sell = prediction.sell;
+    console.log(buy.length + " stocks have a buy indicator");
+    console.log(sell.length + " stocks have a sell indicator");
     console.log("ML model ran");
     
     // Create a map for the stocks and price, this will be used to generate the list of securities we can afford
@@ -68,7 +70,7 @@ const task = cron.schedule('00 20 09 * * *', async () => {
         }
         await sleep(1000); // sleep for 1 seconds for rate limiting reasons
     }
-
+    console.log("Stock map " + stock_map)
     Portfolio.find({} , (err, portfolios) => {
         if (err) {
             console.log(err);
@@ -82,6 +84,7 @@ const task = cron.schedule('00 20 09 * * *', async () => {
             let done = false;
             while (!done){
                 let canAfford = await getSecuritiesWithBuyAndCanAfford(buy, await portfolioService.getPortfolioById(portfolio.id));
+                console.log("CanAfford list for " + portfolio.id + " :" + canAfford);
                 if (canAfford.length != 0) {
                     await buySecurity(canAfford, await portfolioService.getPortfolioById(portfolio.id));
                     await sleep(3000); // Sleep for 3 seconds for amount of api calls we can make

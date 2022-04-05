@@ -74,18 +74,22 @@ function getSMA(symbol){
         headers: {'User-Agent': 'request'}
     }, (err, res, data) => {
         if (err) {
-        console.log('Error:', err);
-        reject(err);
+            console.log('Error:', err);
+            reject(err);
         } else if (res.statusCode !== 200) {
-        console.log('Status:', res.statusCode);
+            console.log('Status:', res.statusCode);
         } else {
             if(isEmpty(data)){
                 return resolve(0);
             }
-        let smaData = data['Technical Analysis: SMA'];
-        let date = Object.keys(smaData)[0];
-        smaData = smaData[date]["SMA"];
-        resolve(smaData);
+            let smaData = data['Technical Analysis: SMA'];
+            if (Object.keys(smaData).length === 0) {
+                console.log("Could not get SMA data from alpha vantage for " + symbol)
+                return resolve(0)
+            }
+            let date = Object.keys(smaData)[0];
+            smaData = smaData[date]["SMA"];
+            resolve(smaData);
         }
     });
     })
