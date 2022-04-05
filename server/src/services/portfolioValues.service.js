@@ -56,8 +56,8 @@ const addPortfolioValuesJob = async () => {
             portfolioValue: portfolioValue
         });
         await portfolioService.updatePortfolioById(portfolio.id, {
-          currPortfolioValue: portfolioValue, 
-          profit: (portfolioValue - portfolio.initialFreeCash)
+          currPortfolioValue: portfolioValue.toFixed(2), 
+          profit: (portfolioValue - portfolio.initialFreeCash).toFixed(2)
         });
     })
   });
