@@ -145,7 +145,7 @@ const sellSecurity = async (portfolio, security) => {
         avgPrice: 0,
         shares: 0,
     });
-    console.log("Sold 1 share of " + security.securityCode);
+    console.log("Sold 1 share of " + security.securityCode + " for portfolio: " + portfolio.id);
 }
 
 const buySecurity = async (canAfford, portfolio) => {
@@ -189,7 +189,7 @@ const buySecurity = async (canAfford, portfolio) => {
         await portfolioService.updatePortfolioById(portfolio.id, {
           freeCash: (freeCash - currPrice - portfolio.transactionCost).toFixed(2),
         });
-        console.log("Purchased 1 share of " + code);
+        console.log("Purchased 1 share of " + code + " for portfolio " + portfolio.id);
      });
     }
 
