@@ -37,7 +37,7 @@ const symbols = ["BF.B", "LRCX", "NI", "WTW", "MMM", "AOS", "ABT", "ABBV", "ABMD
 "TRMB", "TFC", "TWTR", "TYL", "TSN", "USB", "UDR", "ULTA", "UAA", "UA", "UNP", "UAL", "UPS", "URI",
 "UNH", "UHS", "VLO", "VTR", "VRSN", "VRSK", "VZ", "VRTX", "VFC", "VIAC", "VTRS", "V", "VNO", "VMC",
 "WRB", "GWW", "WAB", "WBA", "WMT", "WM", "WAT", "WEC", "WFC", "WST", "WDC", "WU", "WRK",
-"WY", "WHR", "WMB", "WYNN", "XEL", "XLNX", "XYL", "YUM", "ZBRA", "ZBH", "ZION", "ZTS"];
+"WY", "WHR", "WMB", "WYNN", "XEL", "XLNX", "XYL", "YUM", "ZBRA", "ZBH", "ZION", "ZTS", "WELL"];
 
 module.exports = {
     symbols,
