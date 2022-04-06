@@ -162,6 +162,9 @@ const buySecurity = async (canAfford, portfolio) => {
         console.log("Could not get current price for " + code);
         return;
     }
+    if ((freeCash - currPrice - portfolio.transactionCost) < 0) {
+        return -1;
+    }
     Security.findOne({portfolio: portfolio.id, securityCode: code}, async function(err,security) { 
         if (security) {
             await securityService.updateSecurityById(security.id, {
@@ -193,6 +196,7 @@ const buySecurity = async (canAfford, portfolio) => {
           freeCash: (freeCash - currPrice - portfolio.transactionCost).toFixed(2),
         });
         console.log("Purchased 1 share of " + code + " for portfolio " + portfolio.id);
+        return 0;
      });
     }
 

@@ -18,18 +18,19 @@ function getRSI(symbol){
         headers: {'User-Agent': 'request'}
     }, (err, res, data) => {
         if (err) {
-        console.log('Error:', err);
-        reject(err);
+            console.log('Error:', err);
+            reject(err);
         } else if (res.statusCode !== 200) {
-        console.log('Status:', res.statusCode);
+            console.log('Tried to get RSI data for ' + symbol + '. Got status:', res.statusCode);
+            return resolve(0);
         } else {
             if(isEmpty(data)){
                 return resolve(0);
             }
-        let rsiData = data['Technical Analysis: RSI'];
-        let date = Object.keys(rsiData)[0];
-        rsiData = rsiData[date]["RSI"];
-        resolve(rsiData);
+            let rsiData = data['Technical Analysis: RSI'];
+            let date = Object.keys(rsiData)[0];
+            rsiData = rsiData[date]["RSI"];
+            resolve(rsiData);
         }
     });
     })
@@ -47,18 +48,19 @@ function getEMA(symbol){
         headers: {'User-Agent': 'request'}
     }, (err, res, data) => {
         if (err) {
-        console.log('Error:', err);
-        reject(err);
+            console.log('Error:', err);
+            reject(err);
         } else if (res.statusCode !== 200) {
-        console.log('Status:', res.statusCode);
+            console.log('Tried to get EMA data for ' + symbol + '. Got status:', res.statusCode);
+            return resolve(0);
         } else {
             if(isEmpty(data)){
                 return resolve(0);
             }
-        let emaData = data['Technical Analysis: EMA'];
-        let date = Object.keys(emaData)[0];
-        emaData = emaData[date]["EMA"];
-        resolve(emaData);
+            let emaData = data['Technical Analysis: EMA'];
+            let date = Object.keys(emaData)[0];
+            emaData = emaData[date]["EMA"];
+            resolve(emaData);
         }
     });
     })
@@ -77,7 +79,8 @@ function getSMA(symbol){
             console.log('Error:', err);
             reject(err);
         } else if (res.statusCode !== 200) {
-            console.log('Status:', res.statusCode);
+            console.log('Tried to get SMA data for ' + symbol + '. Got status:', res.statusCode);
+            return resolve(0);
         } else {
             if(isEmpty(data)){
                 return resolve(0);
