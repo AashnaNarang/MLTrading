@@ -138,7 +138,7 @@ async function run(){
     const sell = [];
 
     for(element of symbols){
-        await sleep(1000); // sleep for 1 seconds for the api
+        await sleep(500); // sleep for .5 seconds for the api
         //get technical indicator per stock
         let rsiData = await getRSI(element);
         let emaData = await getEMA(element);
