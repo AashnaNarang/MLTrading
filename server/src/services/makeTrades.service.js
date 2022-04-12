@@ -51,7 +51,7 @@ const getQuote = async (symbol) => {
     })
 }
 // Job automatically runs every day at 9:30 am (00 seconds, 30 minutes, 09 hours)
-const task = cron.schedule('00 21 03 * * *', async () => {
+const task = cron.schedule('00 30 09 * * *', async () => {
     console.log("Starting makeTrades Job");
     const prediction =  await machineLearningService.run();
     const buy = prediction.buy;
