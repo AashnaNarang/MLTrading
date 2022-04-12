@@ -50,13 +50,16 @@ const getQuote = async (symbol) => {
     });
     })
 }
-// Job automatically runs every day at 9:30 am (00 seconds, 30 minutes, 09 hours)
+// Job automatically runs every day at 9:20 am (00 seconds, 20 minutes, 09 hours)
 const task = cron.schedule('00 20 09 * * *', async () => {
     console.log("Starting makeTrades Job");
     const prediction =  await machineLearningService.run();
     const buy = prediction.buy;
     const sell = prediction.sell;
+    console.log(buy.length + " stocks have a buy indicator");
+    console.log(sell.length + " stocks have a sell indicator");
     console.log("ML model ran");
+    let purchaseMap = new Map();
     
     // Create a map for the stocks and price, this will be used to generate the list of securities we can afford
     for (element of symbols) {
@@ -66,9 +69,9 @@ const task = cron.schedule('00 20 09 * * *', async () => {
         } else {
             stock_map.set(element, quote);
         }
-        await sleep(1000); // sleep for 1 seconds for rate limiting reasons
+        await sleep(500); // Sleep for 0.5 seconds for amount of api calls we can make
     }
-
+    console.log("Stock map " + stock_map)
     Portfolio.find({} , (err, portfolios) => {
         if (err) {
             console.log(err);
@@ -76,16 +79,27 @@ const task = cron.schedule('00 20 09 * * *', async () => {
         }
         portfolios.map(async (portfolio) => {
             let securities = await Security.find({portfolio: portfolio.id}); 
-
             // Sell the securities first in order to have more free cash
             await sellSecurities(sell, await portfolioService.getPortfolioById(portfolio.id), securities);
             let done = false;
+            //local copy to use
+            let portfolioFreeCash = await portfolioService.getPortfolioById(portfolio.id)
+            portfolioFreeCash = portfolioFreeCash.freeCash;
+            console.log("The portfolio free cash amount is " + portfolioFreeCash);
             while (!done){
-                let canAfford = await getSecuritiesWithBuyAndCanAfford(buy, await portfolioService.getPortfolioById(portfolio.id));
+                let canAfford = await getSecuritiesWithBuyAndCanAfford(buy, portfolioFreeCash);
+                console.log("CanAfford list for " + portfolio.id + " :" + canAfford);
                 if (canAfford.length != 0) {
-                    await buySecurity(canAfford, await portfolioService.getPortfolioById(portfolio.id));
-                    await sleep(3000); // Sleep for 3 seconds for amount of api calls we can make
+                    portfolioFreeCash = await selectStocksToBuy(purchaseMap, canAfford, portfolioFreeCash, await portfolioService.getPortfolioById(portfolio.id))
+                    console.log("The portfolio free cash amount is " + portfolioFreeCash);
+                    await sleep(1000); // Sleep for 1 seconds for amount of api calls we can make
                 } else {
+                    for (const [key, value] of purchaseMap.entries()) {
+                        console.log(key, value);
+                        let port = await portfolioService.getPortfolioById(portfolio.id);
+                        await buySecurity(key, value, await port);
+                        await sleep(2000) // The sleep is to allow the portfolio value time to update.
+                      }                      
                     done = true;
                 }
             }
@@ -105,14 +119,14 @@ const sellSecurities = async (sell, portfolio, securities) => {
     }
 }
 
-const getSecuritiesWithBuyAndCanAfford = async (buy, portfolio) => {
+const getSecuritiesWithBuyAndCanAfford = async (buy, portfolioFreeCash) => {
     let canAfford = [];
     for (let b of buy) {
         let price = stock_map.get(b);
         if(price < 0){
             console.log("There is an issue with " + b);
         }
-        else if (price < portfolio.freeCash) {
+        else if (price < portfolioFreeCash) {
             canAfford.push(b);
         }
     }
@@ -148,22 +162,15 @@ const sellSecurity = async (portfolio, security) => {
     console.log("Sold 1 share of " + security.securityCode + " for portfolio: " + portfolio.id);
 }
 
-const buySecurity = async (canAfford, portfolio) => {
-    let rndInt = randomIntFromInterval(0, canAfford.length - 1);
-    let code = canAfford[rndInt];
-    let freeCash = portfolio.freeCash;
-    
-    // Getting current live price to be accurate
-    let currPrice = await getYahooPrice(code);
-    if (currPrice == -1){
-        console.log("Could not get current price for " + code);
-        return;
-    }
+const buySecurity = async (code, value , portfolio) => {
+    let currPrice = value[1];
+    let sharesToBuy = value[0];
+    console.log("The portfolio free cash amount is " + portfolio.freeCash);
     Security.findOne({portfolio: portfolio.id, securityCode: code}, async function(err,security) { 
         if (security) {
             await securityService.updateSecurityById(security.id, {
-                avgPrice: ((security.avgPrice * security.shares + currPrice) / (security.shares + 1)).toFixed(2),
-                shares: security.shares + 1,
+                avgPrice: ((security.avgPrice * security.shares + (currPrice * sharesToBuy)) / (security.shares + sharesToBuy)).toFixed(2),
+                shares: security.shares + sharesToBuy,
             });
         } else {
             let securityName = stocks.lookup(code);
@@ -176,25 +183,53 @@ const buySecurity = async (canAfford, portfolio) => {
                  securityName: securityName,
                  securityCode: code,
                  avgPrice: currPrice,
-                 shares: 1,
+                 shares: sharesToBuy,
              });
         }
         await tradeService.addTrade({
             portfolio: portfolio.id,
-            price: currPrice,
+            price: currPrice * sharesToBuy,
             action: "Purchased",
             security: security,
-            sharesTraded: 1,
+            sharesTraded: sharesToBuy,
         });
         await portfolioService.updatePortfolioById(portfolio.id, {
-          freeCash: (freeCash - currPrice - portfolio.transactionCost).toFixed(2),
+          freeCash: (portfolio.freeCash - (currPrice * sharesToBuy) - portfolio.transactionCost).toFixed(2),
         });
-        console.log("Purchased 1 share of " + code + " for portfolio " + portfolio.id);
+        console.log("Purchased a share of " + code + " for portfolio " + portfolio.id);
      });
+     return 0;
     }
 
 
+    const selectStocksToBuy = async (purchaseMap, canAfford, portfolioFreeCash, portfolio) => {
+        let rndInt = randomIntFromInterval(0, canAfford.length - 1);
+        let code = canAfford[rndInt];        
+        // Getting current live price to be accurate
+        let currPrice = await getYahooPrice(code);
+        if (currPrice == -1){
+            console.log("Could not get current price for " + code);
+            return portfolioFreeCash;
+        }
+        if(purchaseMap.has(code)){
+            if(portfolioFreeCash - currPrice < 0){
+                return portfolioFreeCash;
+            }
+            let updateValue = purchaseMap.get(code);
+            purchaseMap.set(code, [updateValue[0]+1, updateValue[1]]);
+            portfolioFreeCash = portfolioFreeCash - currPrice;
+            return portfolioFreeCash;
+        }else{    
+            if(portfolioFreeCash - currPrice - portfolio.transactionCost < 0){
+                return portfolioFreeCash;
+            }        
+            purchaseMap.set(code, [1, currPrice]);
+            portfolioFreeCash = portfolioFreeCash - currPrice - portfolio.transactionCost;
+            return portfolioFreeCash;
 
+        }
+    }
+    
 
 const getYahooPrice = async (symbol) => {
     return new Promise(function (resolve, reject){

@@ -18,18 +18,19 @@ function getRSI(symbol){
         headers: {'User-Agent': 'request'}
     }, (err, res, data) => {
         if (err) {
-        console.log('Error:', err);
-        reject(err);
+            console.log('Error:', err);
+            reject(err);
         } else if (res.statusCode !== 200) {
-        console.log('Status:', res.statusCode);
+            console.log('Tried to get RSI data for ' + symbol + '. Got status:', res.statusCode);
+            return resolve(0);
         } else {
             if(isEmpty(data)){
                 return resolve(0);
             }
-        let rsiData = data['Technical Analysis: RSI'];
-        let date = Object.keys(rsiData)[0];
-        rsiData = rsiData[date]["RSI"];
-        resolve(rsiData);
+            let rsiData = data['Technical Analysis: RSI'];
+            let date = Object.keys(rsiData)[0];
+            rsiData = rsiData[date]["RSI"];
+            resolve(rsiData);
         }
     });
     })
@@ -47,18 +48,19 @@ function getEMA(symbol){
         headers: {'User-Agent': 'request'}
     }, (err, res, data) => {
         if (err) {
-        console.log('Error:', err);
-        reject(err);
+            console.log('Error:', err);
+            reject(err);
         } else if (res.statusCode !== 200) {
-        console.log('Status:', res.statusCode);
+            console.log('Tried to get EMA data for ' + symbol + '. Got status:', res.statusCode);
+            return resolve(0);
         } else {
             if(isEmpty(data)){
                 return resolve(0);
             }
-        let emaData = data['Technical Analysis: EMA'];
-        let date = Object.keys(emaData)[0];
-        emaData = emaData[date]["EMA"];
-        resolve(emaData);
+            let emaData = data['Technical Analysis: EMA'];
+            let date = Object.keys(emaData)[0];
+            emaData = emaData[date]["EMA"];
+            resolve(emaData);
         }
     });
     })
@@ -74,18 +76,23 @@ function getSMA(symbol){
         headers: {'User-Agent': 'request'}
     }, (err, res, data) => {
         if (err) {
-        console.log('Error:', err);
-        reject(err);
+            console.log('Error:', err);
+            reject(err);
         } else if (res.statusCode !== 200) {
-        console.log('Status:', res.statusCode);
+            console.log('Tried to get SMA data for ' + symbol + '. Got status:', res.statusCode);
+            return resolve(0);
         } else {
             if(isEmpty(data)){
                 return resolve(0);
             }
-        let smaData = data['Technical Analysis: SMA'];
-        let date = Object.keys(smaData)[0];
-        smaData = smaData[date]["SMA"];
-        resolve(smaData);
+            let smaData = data['Technical Analysis: SMA'];
+            if (Object.keys(smaData).length === 0) {
+                console.log("Could not get SMA data from alpha vantage for " + symbol)
+                return resolve(0)
+            }
+            let date = Object.keys(smaData)[0];
+            smaData = smaData[date]["SMA"];
+            resolve(smaData);
         }
     });
     })
@@ -131,7 +138,7 @@ async function run(){
     const sell = [];
 
     for(element of symbols){
-        await sleep(1000); // sleep for 1 seconds for the api
+        await sleep(500); // sleep for .5 seconds for the api
         //get technical indicator per stock
         let rsiData = await getRSI(element);
         let emaData = await getEMA(element);
