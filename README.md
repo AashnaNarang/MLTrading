@@ -27,7 +27,9 @@
 7. To see the local db in MongoDB Compass, open MongoDB Compass and use what is written in your .env file as the connection string
 
 # Instructions to deploy the model and run it in the backend:
-1. Replace the group1-shard1of1.bin file on your local server folder with the one from the zip folder. It is found in MLTrading/server/services/model.
-2. Go to makeTrades.service.js and check to see if the time set is what one would prefer. It is found on the cron.schedule method, and uses military time. It is currently set to 9:20 am. 
-3. Open a terminal and CD into server. 
-4. yarn dev
+1. Go to makeTrades.service.js and check to see if the time set is what one would prefer. It is found on the cron.schedule method, and uses military time. It is currently set to 9:20 am. 
+2. Open a terminal and CD into server. 
+3. yarn dev
+
+# Troubleshooting
+Replace the group1-shard1of1.bin file on your local server folder with the one from the zip folder model_js. Model_js is the converted tensorflow model into tensorflowjs. YOu can find the groupshard file in MLTrading/server/services/model.
