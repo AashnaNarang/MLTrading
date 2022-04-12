@@ -51,7 +51,7 @@ const getQuote = async (symbol) => {
     })
 }
 // Job automatically runs every day at 9:30 am (00 seconds, 30 minutes, 09 hours)
-const task = cron.schedule('00 46 18 * * *', async () => {
+const task = cron.schedule('00 21 03 * * *', async () => {
     console.log("Starting makeTrades Job");
     const prediction =  await machineLearningService.run();
     const buy = prediction.buy;
@@ -82,18 +82,23 @@ const task = cron.schedule('00 46 18 * * *', async () => {
             // Sell the securities first in order to have more free cash
             await sellSecurities(sell, await portfolioService.getPortfolioById(portfolio.id), securities);
             let done = false;
-            let portfolioFreeCash = portfolio.freeCash;
+            //local copy to use
+            let portfolioFreeCash = await portfolioService.getPortfolioById(portfolio.id)
+            portfolioFreeCash = portfolioFreeCash.freeCash;
+            console.log("The portfolio free cash amount is " + portfolioFreeCash);
             while (!done){
                 let canAfford = await getSecuritiesWithBuyAndCanAfford(buy, portfolioFreeCash);
                 console.log("CanAfford list for " + portfolio.id + " :" + canAfford);
                 if (canAfford.length != 0) {
                     portfolioFreeCash = await selectStocksToBuy(purchaseMap, canAfford, portfolioFreeCash, await portfolioService.getPortfolioById(portfolio.id))
+                    console.log("The portfolio free cash amount is " + portfolioFreeCash);
                     await sleep(1000); // Sleep for 1 seconds for amount of api calls we can make
                 } else {
                     for (const [key, value] of purchaseMap.entries()) {
                         console.log(key, value);
-                        await buySecurity(key, value, await portfolioService.getPortfolioById(portfolio.id));
-                        await sleep(500); // Sleep for 0.5 seconds for amount of api calls we can make
+                        let port = await portfolioService.getPortfolioById(portfolio.id);
+                        await buySecurity(key, value, await port);
+                        await sleep(2000)
                       }                      
                     done = true;
                 }
@@ -160,6 +165,7 @@ const sellSecurity = async (portfolio, security) => {
 const buySecurity = async (code, value , portfolio) => {
     let currPrice = value[1];
     let sharesToBuy = value[0];
+    console.log("The portfolio free cash amount is " + portfolio.freeCash);
     Security.findOne({portfolio: portfolio.id, securityCode: code}, async function(err,security) { 
         if (security) {
             await securityService.updateSecurityById(security.id, {
@@ -191,8 +197,8 @@ const buySecurity = async (code, value , portfolio) => {
           freeCash: (portfolio.freeCash - (currPrice * sharesToBuy) - portfolio.transactionCost).toFixed(2),
         });
         console.log("Purchased a share of " + code + " for portfolio " + portfolio.id);
-        return 0;
      });
+     return 0;
     }
 
 
@@ -203,14 +209,20 @@ const buySecurity = async (code, value , portfolio) => {
         let currPrice = await getYahooPrice(code);
         if (currPrice == -1){
             console.log("Could not get current price for " + code);
-            return;
+            return portfolioFreeCash;
         }
         if(purchaseMap.has(code)){
+            if(portfolioFreeCash - currPrice < 0){
+                return portfolioFreeCash;
+            }
             let updateValue = purchaseMap.get(code);
             purchaseMap.set(code, [updateValue[0]+1, updateValue[1]]);
             portfolioFreeCash = portfolioFreeCash - currPrice;
             return portfolioFreeCash;
-        }else{            
+        }else{    
+            if(portfolioFreeCash - currPrice - portfolio.transactionCost < 0){
+                return portfolioFreeCash;
+            }        
             purchaseMap.set(code, [1, currPrice]);
             portfolioFreeCash = portfolioFreeCash - currPrice - portfolio.transactionCost;
             return portfolioFreeCash;
