@@ -98,7 +98,7 @@ const task = cron.schedule('00 21 03 * * *', async () => {
                         console.log(key, value);
                         let port = await portfolioService.getPortfolioById(portfolio.id);
                         await buySecurity(key, value, await port);
-                        await sleep(2000)
+                        await sleep(2000) // The sleep is to allow the portfolio value time to update.
                       }                      
                     done = true;
                 }
