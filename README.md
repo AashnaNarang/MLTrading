@@ -32,4 +32,4 @@
 3. yarn dev
 
 # Troubleshooting
-Replace the group1-shard1of1.bin file on your local server folder with the one from the zip folder model_js. Model_js is the converted tensorflow model into tensorflowjs. YOu can find the groupshard file in MLTrading/server/services/model.
+Replace the group1-shard1of1.bin file on your local server folder with the one from the zip folder model_js. Model_js is the converted tensorflow model into tensorflowjs. You can find the groupshard file in MLTrading/server/services/model.
