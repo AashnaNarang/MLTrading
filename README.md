@@ -25,3 +25,9 @@
     Open localhost:3000 to open the react app
 6. Download MongoDB from here: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/ 
 7. To see the local db in MongoDB Compass, open MongoDB Compass and use what is written in your .env file as the connection string
+
+# Instructions to deploy the model and run it in the backend:
+1. Replace the group1-shard1of1.bin file on your local server folder with the one from the zip folder. It is found in MLTrading/server/services/model.
+2. Go to makeTrades.service.js and check to see if the time set is what one would prefer. It is found on the cron.schedule method, and uses military time. It is currently set to 9:20 am. 
+3. Open a terminal and CD into server. 
+4. yarn dev
